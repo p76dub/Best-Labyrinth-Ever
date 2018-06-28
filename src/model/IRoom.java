@@ -1,4 +1,6 @@
-package Model;
+package model;
+
+import util.Direction;
 
 /**
  * Modélise les salles du labyrinthe.
@@ -31,10 +33,10 @@ public interface IRoom {
     IRoom getRoomIn(Direction d);
 
     /**
-     * Retourne l'item de la pièce
+     * Retourne l'item de la pièce ou null s'il n'y en a pas.
      * @return item
      */
-    Item getItem();
+    IItem getItem();
 
     // Commandes
     /**

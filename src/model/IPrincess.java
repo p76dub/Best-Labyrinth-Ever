@@ -1,13 +1,15 @@
 package model;
 
+import java.nio.file.Path;
+
 public interface IPrincess {
 
     // Requêtes
     /**
-     * Retourne le nom de l'image de l'ennemi
+     * Retourne le nom de l'image de la princesse.
      * @return nameImage
      */
-    String getNameImage();
+    Path getImagePath();
 
     /**
      * Retourne si la princesse a été retrouvée

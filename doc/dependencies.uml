@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>model</OriginalElement>
+  <nodes>
+    <node x="128.42361111111111" y="0.0">model.IItem</node>
+    <node x="133.375" y="160.0">model.IPrincess</node>
+    <node x="26.16666666666667" y="160.0">model.IEnemy</node>
+    <node x="253.375" y="240.0">model.ITheme</node>
+    <node x="109.92361111111111" y="80.0">model.IRoom</node>
+    <node x="20.29166666666667" y="240.0">model.IPlayer</node>
+    <node x="0.0" y="0.0">util.Direction</node>
+    <node x="0.0" y="315.0">util.TypeEnemy</node>
+    <node x="153.0" y="315.0">util.TypeTheme</node>
+    <node x="246.375" y="160.0">model.ILabyrinth</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="model.IPrincess" target="model.IRoom">
+      <point x="0.0" y="-15.0" />
+      <point x="179.875" y="140.0" />
+      <point x="162.42361111111111" y="140.0" />
+      <point x="10.5" y="15.0" />
+    </edge>
+    <edge source="model.IPlayer" target="model.IRoom">
+      <point x="30.75" y="-15.0" />
+      <point x="92.04166666666667" y="220.0" />
+      <point x="122.875" y="220.0" />
+      <point x="122.875" y="140.0" />
+      <point x="141.42361111111111" y="140.0" />
+      <point x="-10.5" y="15.0" />
+    </edge>
+    <edge source="model.IItem" target="model.IRoom">
+      <point x="18.75" y="15.0" />
+      <point x="184.67361111111111" y="55.0" />
+      <point x="179.92361111111111" y="55.0" />
+      <point x="28.0" y="-15.0" />
+    </edge>
+    <edge source="model.IEnemy" target="model.IPlayer">
+      <point x="21.5" y="15.0" />
+      <point x="90.66666666666667" y="210.0" />
+      <point x="71.54166666666667" y="210.0" />
+      <point x="10.25" y="-15.0" />
+    </edge>
+    <edge source="model.IEnemy" target="model.IRoom">
+      <point x="21.5" y="-15.0" />
+      <point x="90.66666666666667" y="130.0" />
+      <point x="120.42361111111111" y="130.0" />
+      <point x="-31.5" y="15.0" />
+    </edge>
+    <edge source="model.ITheme" target="model.ILabyrinth">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="model.IRoom" target="util.Direction">
+      <point x="-28.0" y="-15.0" />
+      <point x="123.92361111111111" y="55.0" />
+      <point x="79.16666666666667" y="55.0" />
+      <point x="31.66666666666667" y="15.0" />
+    </edge>
+    <edge source="model.ILabyrinth" target="model.IRoom">
+      <point x="0.0" y="-15.0" />
+      <point x="296.375" y="130.0" />
+      <point x="183.42361111111111" y="130.0" />
+      <point x="31.5" y="15.0" />
+    </edge>
+    <edge source="model.IPlayer" target="model.IEnemy">
+      <point x="-10.25" y="-15.0" />
+      <point x="51.04166666666667" y="220.0" />
+      <point x="47.66666666666667" y="220.0" />
+      <point x="-21.5" y="15.0" />
+    </edge>
+    <edge source="model.IRoom" target="model.IItem">
+      <point x="0.0" y="-15.0" />
+      <point x="151.92361111111111" y="55.0" />
+      <point x="147.17361111111111" y="55.0" />
+      <point x="-18.75" y="15.0" />
+    </edge>
+    <edge source="model.IEnemy" target="util.Direction">
+      <point x="-21.5" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="model.IPlayer" target="util.Direction">
+      <point x="-30.75" y="-15.0" />
+      <point x="30.54166666666667" y="220.0" />
+      <point x="15.666666666666671" y="220.0" />
+      <point x="-31.66666666666667" y="15.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="119.0" y="127.5" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
