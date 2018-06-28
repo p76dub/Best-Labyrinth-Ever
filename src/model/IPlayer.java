@@ -1,4 +1,6 @@
-package Model;
+package model;
+
+import util.Direction;
 
 public interface IPlayer {
 
@@ -7,19 +9,19 @@ public interface IPlayer {
      * Retourne le nombre de points d'attaque de le joueur
      * @return attackPoints
      */
-    Int getAttackPoints();
+    int getAttackPoints();
 
     /**
      * Retourne le nombre de points de défense de le joueur
      * @return defensivePoints
      */
-    Int getDefensivePoints();
+    int getDefensivePoints();
 
     /**
      * Retourne le nombre de points de vie de le joueur
      * @return lifePoints
      */
-    Int getLifePoints();
+    int getLifePoints();
 
     /**
      * Retourne si le joueur est mort

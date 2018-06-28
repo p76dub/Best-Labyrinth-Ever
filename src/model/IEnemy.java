@@ -1,4 +1,6 @@
-package Model;
+package model;
+
+import util.Direction;
 
 public interface IEnemy {
 
@@ -13,19 +15,19 @@ public interface IEnemy {
      * Retourne le nombre de points d'attaque de l'ennemi
      * @return attackPoints
      */
-    Int getAttackPoints();
+    int getAttackPoints();
 
     /**
      * Retourne le nombre de points de défense de l'ennemi
      * @return defensivePoints
      */
-    Int getDefensivePoints();
+    int getDefensivePoints();
 
     /**
      * Retourne le nombre de points de vie de l'ennemi
      * @return lifePoints
      */
-    Int getLifePoints();
+    int getLifePoints();
 
     /**
      * Retourne le message d'apparition de l'ennemi

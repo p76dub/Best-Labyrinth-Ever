@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 public interface IItem {
 
@@ -13,13 +13,13 @@ public interface IItem {
      * Retourne le nombre de points d'attaque de l'item
      * @return attackPoints
      */
-    Int getAttackPoints();
+    int getAttackPoints();
 
     /**
      * Retourne le nombre de points de défense de l'item
      * @return defensivePoints
      */
-    Int getDefensivePoints();
+    int getDefensivePoints();
 
     /**
      * Retourne si l'item a été ramassé

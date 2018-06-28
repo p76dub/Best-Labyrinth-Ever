@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 /**
  * Le labyrinthe des pièces, rectangulaire (rows * cols).
