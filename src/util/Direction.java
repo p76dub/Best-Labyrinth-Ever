@@ -26,19 +26,19 @@ public final class Direction {
     public static final Direction SOUTH = new Direction("bottom");
     public static final Direction WEST  = new Direction("right");
 
-    private static final Map DIRECTIONS;
+    private static final Map<String, Direction> DIRECTIONS;
 
     static {
-        DIRECTIONS = new HashMap();
+        DIRECTIONS = new HashMap<>();
         DIRECTIONS.put("top", NORTH);
         DIRECTIONS.put("left", EAST);
         DIRECTIONS.put("bottom", SOUTH);
         DIRECTIONS.put("right", WEST);
     }
 
-    private static final Map OPPOSITES;
+    private static final Map<Direction, Direction> OPPOSITES;
     static {
-        OPPOSITES = new HashMap();
+        OPPOSITES = new HashMap<>();
         OPPOSITES.put(NORTH, SOUTH);
         OPPOSITES.put(EAST, WEST);
         OPPOSITES.put(SOUTH, NORTH);

@@ -22,41 +22,28 @@ public interface IItem {
     int getDefensivePoints();
 
     /**
-     * Retourne si l'item a été ramassé
+     * Retourne si l'item a été ramassé.
      * @return taken
      */
-    boolean hasTaken();
+    boolean isTaken();
 
     /**
-     * Retourne la pièce où se situe l'ennemi
+     * Retourne la pièce dans laquelle se trouve l'item
      * @return myRoom
+     * @pre !isTaken()
      */
     IRoom getRoom();
 
     /**
-     * Retourne le message d'apparition de l'item
+     * Retourne le message d'apparition de l'item.
      * @return message
      */
     abstract String getMessage();
 
     // Commandes
     /**
-     * Modifie les points d'attaque de l'item
-     * @param points
-     * @post getAttackPoints() == points
+     * Prendre l'item.
+     * @post isTaken()
      */
-    void setAttackPoints(int points);
-
-    /**
-     * Modifie les points de défense de l'item
-     * @param points
-     * @post getDefensivePoints() == points
-     */
-    void setDefensivePoints(int points);
-
-    /**
-     * Prends l'item.
-     * @post getTaken()
-     */
-    void setTaken();
+    void take();
 }

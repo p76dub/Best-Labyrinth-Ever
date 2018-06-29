@@ -6,16 +6,16 @@ public interface IPrincess {
 
     // Requêtes
     /**
-     * Retourne le nom de l'image de la princesse.
+     * Retourne le chemin de l'image de la princesse.
      * @return nameImage
      */
     Path getImagePath();
 
     /**
      * Retourne si la princesse a été retrouvée
-     * @return save
+     * @return safe
      */
-    boolean isSave();
+    boolean isSafe();
 
     /**
      * Retourne le message d'apparition de l'item

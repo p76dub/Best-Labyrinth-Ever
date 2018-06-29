@@ -2,40 +2,7 @@ package model;
 
 import util.Direction;
 
-public interface IPlayer {
-
-    // Requêtes
-    /**
-     * Retourne le nombre de points d'attaque de le joueur
-     * @return attackPoints
-     */
-    int getAttackPoints();
-
-    /**
-     * Retourne le nombre de points de défense de le joueur
-     * @return defensivePoints
-     */
-    int getDefensivePoints();
-
-    /**
-     * Retourne le nombre de points de vie de le joueur
-     * @return lifePoints
-     */
-    int getLifePoints();
-
-    /**
-     * Retourne si le joueur est mort
-     * @return getLifePoints() == 0
-     */
-    boolean isDead();
-
-    /**
-     * Retourne la pièce où se situe le joueur
-     * @return myRoom
-     */
-    IRoom getRoom();
-
-    // Commandes
+public interface IPlayer extends IEntity {
     /**
      * Modifie les points d'attaque de le joueur
      * @param points
@@ -58,26 +25,8 @@ public interface IPlayer {
     void setLifePoints(int points);
 
     /**
-     * Le joueur attaque!
-     * @param enemy
-     * @pre enemy != null
-     * @post enemy.getLifePoints() == enemy.getLifePoints() - DEGAT
+     * Equiper un item.
+     * @param item
      */
-    void attack(IEnemy enemy);
-
-    /**
-     * Le joueur se défend!
-     * @param enemy
-     * @pre enemy != null
-     * @post getLifePoints() == getLifePoints() - DEGAT
-     */
-    void defense(IEnemy enemy);
-
-    /**
-     * Déplace le joueur en fonction de la direction
-     * @param direction
-     * @pre direction != null && getRoom().canExitIn(direction)
-     * @post getRoom() == getRoom().getRoomIn(direction)
-     */
-    void advance(Direction direction);
+    void equipe(IItem item);
 }
