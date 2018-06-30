@@ -1,4 +1,4 @@
-package model;
+package model.interfaces;
 
 /**
  * Le labyrinthe des pièces, rectangulaire (rows * cols).

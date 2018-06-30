@@ -1,4 +1,6 @@
-package model;
+package model.interfaces;
+
+import java.nio.file.Path;
 
 public interface IItem {
 
@@ -7,7 +9,7 @@ public interface IItem {
      * Retourne le nom de l'image de l'item
      * @return nameImage
      */
-    String getNameImage();
+    Path getImagePath();
 
     /**
      * Retourne le nombre de points d'attaque de l'item
@@ -20,6 +22,12 @@ public interface IItem {
      * @return defensivePoints
      */
     int getDefensivePoints();
+
+    /**
+     * Retourne le nombre de points de vie de l'item
+     * @return lifePoints
+     */
+    int getLifePoints();
 
     /**
      * Retourne si l'item a été ramassé.
@@ -38,12 +46,5 @@ public interface IItem {
      * Retourne le message d'apparition de l'item.
      * @return message
      */
-    abstract String getMessage();
-
-    // Commandes
-    /**
-     * Prendre l'item.
-     * @post isTaken()
-     */
-    void take();
+    String getMessage();
 }
