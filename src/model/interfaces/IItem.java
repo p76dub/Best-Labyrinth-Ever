@@ -47,4 +47,10 @@ public interface IItem {
      * @return message
      */
     String getMessage();
+
+    /**
+     * Prendre l'item.
+     * @post isTaken()
+     */
+    void take();
 }

@@ -21,8 +21,10 @@ class Player implements IPlayer {
      * @param attack ses points d'attaque
      * @param defense ses points de défense
      * @param initialLife quantité de vie initialement
+     * @param room la pièce de départ
      * @pre <pre>
      *     name != null
+     *     room != null
      *     attack > 0
      *     0 <= defense <= 100
      *     initialLife > 0
@@ -32,17 +34,18 @@ class Player implements IPlayer {
      *     getAttackPoints() == attack
      *     getDefensePoints() == defense
      *     getLifePoints() == initialLife
-     *     getRoom() == null
+     *     getRoom() == room
      * </pre>
      */
-    public Player(String name, int attack, int defense, int initialLife) {
-        if (name == null || attack <= 0 || defense > 100 || defense < 0 || initialLife <= 0) {
+    public Player(String name, int attack, int defense, int initialLife, IRoom room) {
+        if (name == null || room != null || attack <= 0 || defense > 100 || defense < 0 || initialLife <= 0) {
             throw new AssertionError();
         }
         this.name = name;
         this.attackPoints = attack;
         this.defensePoints = defense;
         this.lifePoints = initialLife;
+        this.location = room;
     }
 
     // REQUETES

@@ -23,15 +23,17 @@ class Enemy implements IEnemy {
 
     // CONSTRUCTEUR
     /**
-     * Instancie un nouvel ennemis avec les paramètres fournis.
+     * Instancie un nouvel ennemi avec les paramètres fournis.
      * @param name le nom de l'ennemi
      * @param message le message affiché lorsqu'un joueur rencontre cet ennemi
-     * @param image le chemin vers l'image de l'enemi
+     * @param image le chemin vers l'image de l'ennemi
      * @param attack les points d'attaque
      * @param defense les points de défense
      * @param initialLife le nombre de points de vie initialiement
+     * @param room la pièce de départ
      * @pre <pre>
-     *     name != null && message != null && image != null && attack > 0 && defense >= 0 && initialLife > 0
+     *     name != null && message != null && image != null && room != null && attack > 0 && defense >= 0
+     *     && initialLife > 0
      * </pre>
      * @post <pre>
      *     getName().equals(name)
@@ -40,11 +42,12 @@ class Enemy implements IEnemy {
      *     getAttackPoints() == attack
      *     getDefensePoints() == defense
      *     getLifePoints() == initialLife
-     *     getRoom() == null
+     *     getRoom().equals(room)
      * </pre>
      */
-    public Enemy(String name, String message, Path image, int attack, int defense, int initialLife) {
-        if (name == null || message == null || attack <= 0 || defense > 100 || defense < 0 || initialLife <= 0) {
+    public Enemy(String name, String message, Path image, int attack, int defense, int initialLife, IRoom room) {
+        if (name == null || message == null || image == null || attack <= 0 || defense > 100 || defense < 0
+                || initialLife <= 0 || room == null) {
             throw new AssertionError();
         }
         this.name = name;
@@ -53,6 +56,7 @@ class Enemy implements IEnemy {
         this.attackPoints = attack;
         this.defensivePoints = defense;
         this.lifePoints = initialLife;
+        this.location = room;
     }
 
     // REQUETES

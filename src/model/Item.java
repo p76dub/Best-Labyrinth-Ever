@@ -85,4 +85,10 @@ class Item implements IItem {
     public String getMessage() {
         return message;
     }
+
+    // COMMANDE
+    @Override
+    public void take() {
+        this.taken = true;
+    }
 }
