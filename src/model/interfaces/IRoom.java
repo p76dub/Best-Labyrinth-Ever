@@ -37,19 +37,4 @@ public interface IRoom {
      * @return item
      */
     IItem getItem();
-
-    // Commandes
-    /**
-     * Connecte cette salle à la salle r dans la direction d.
-     * @param d, r
-     * @pre <pre>
-     *     d != null
-     *     r != null
-     *     !canExitIn(d)
-     *     !r.canExitIn(d.opposite()) </pre>
-     * @post <pre>
-     *     getRoomIn(d) == r
-     *     getDoorIn(d) == null </pre>
-     */
-    void breakWall(Direction d, IRoom r);
 }

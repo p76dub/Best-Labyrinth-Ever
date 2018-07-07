@@ -66,7 +66,7 @@ public final class Direction {
     }
 
     public Direction opposite() {
-        return (Direction) OPPOSITES.get(this);
+        return OPPOSITES.get(this);
     }
 
     // Outils
@@ -87,7 +87,7 @@ public final class Direction {
             throw new AssertionError();
         }
         String n = String.valueOf(name).toLowerCase();
-        return (Direction) DIRECTIONS.get(n);
+        return DIRECTIONS.get(n);
     }
 
     /**

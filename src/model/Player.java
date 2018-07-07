@@ -85,7 +85,7 @@ class Player implements IPlayer {
         this.defensePoints = Math.max(Math.min(100, this.defensePoints + item.getDefensivePoints()), 0);
         this.attackPoints = Math.max(0, this.attackPoints + item.getAttackPoints());
         this.lifePoints = Math.max(0, this.lifePoints + item.getLifePoints());
-        item.isTaken();
+        item.take();
     }
 
     @Override
