@@ -21,5 +21,5 @@ public interface ITheme {
      * Retourne le labyrinthe associé au thème
      * @return labyrinth
      */
-    ILabyrinth getLabyrinth();
+    IMaze getLabyrinth();
 }

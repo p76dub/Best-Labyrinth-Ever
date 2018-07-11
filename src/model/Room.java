@@ -1,13 +1,13 @@
 package model;
 
 import model.interfaces.IItem;
-import model.interfaces.ILabyrinth;
+import model.interfaces.IMaze;
 import model.interfaces.IRoom;
 import util.Direction;
 
 public class Room implements IRoom {
     // ATTRIBUTES
-    private final ILabyrinth labyrinth;
+    private final IMaze labyrinth;
 
     // CONSTRUCTOR
     /**
@@ -18,7 +18,7 @@ public class Room implements IRoom {
      *     parent != null
      * </pre>
      */
-    Room(ILabyrinth parent) {
+    Room(IMaze parent) {
         if (parent == null) {
             throw new AssertionError();
         }
@@ -38,10 +38,5 @@ public class Room implements IRoom {
     @Override
     public IItem getItem() {
         return null;
-    }
-
-    @Override
-    public void breakWall(Direction d, IRoom r) {
-
     }
 }

@@ -7,7 +7,7 @@ package model.interfaces;
  *     exit() != null
  *     </pre>
  */
-public interface ILabyrinth {
+public interface IMaze {
 
     // Requêtes
     /**

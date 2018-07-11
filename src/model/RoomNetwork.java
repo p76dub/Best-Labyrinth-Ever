@@ -60,7 +60,7 @@ public class RoomNetwork implements INetwork<IRoom, Direction> {
      *     x != null && x != dst ==> get(x, d.opposite()) == null
      *     y != null && y != src ==> get(y, d) == null
      *     get(src, d) == dst
-     *     get(dst, d.opposite()) == srcd
+     *     get(dst, d.opposite()) == src
      * </pre>
      */
     @Override
