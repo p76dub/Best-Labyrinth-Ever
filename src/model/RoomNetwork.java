@@ -16,13 +16,13 @@ import java.util.Map;
 public class RoomNetwork implements INetwork<IRoom, Direction> {
     // STATICS
     // Instance unique du réseau
-    private static INetwork INSTANCE;
+    private static INetwork<IRoom, Direction> INSTANCE;
 
     /**
      * Obtenir l'instance unique RoomNetwork.
      * @return instance unique
      */
-    public static INetwork getInstance() {
+    public static INetwork<IRoom, Direction> getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new RoomNetwork();
         }
@@ -71,6 +71,12 @@ public class RoomNetwork implements INetwork<IRoom, Direction> {
         IRoom neighbour = get(src, d);
         if (neighbour != null && !neighbour.equals(dst)) {
             network.get(neighbour).remove(d.opposite());
+        }
+        if (!network.containsKey(src)) {
+            network.put(src, new HashMap<>());
+        }
+        if (!network.containsKey(dst)) {
+            network.put(dst, new HashMap<>());
         }
         network.get(src).put(d, dst);
         network.get(dst).put(d.opposite(), src);

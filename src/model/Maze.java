@@ -1,7 +1,11 @@
 package model;
 
 import model.interfaces.IMaze;
+import model.interfaces.IMazeGenerator;
 import model.interfaces.IRoom;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 public class Maze implements IMaze {
     // STATICS
@@ -81,8 +85,16 @@ public class Maze implements IMaze {
     }
 
     @Override
-    public void build() {
-
+    public <T extends IMazeGenerator> void build(Class<T> generatorClass) throws MazeGeneratorCreationException {
+        Constructor<T> constructor = null;
+        IMazeGenerator generator = null;
+        try {
+            constructor = generatorClass.getConstructor(IRoom[][].class);
+            generator = constructor.newInstance((Object) rooms);
+            generator.generate();
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            throw new IMaze.MazeGeneratorCreationException(e);
+        }
     }
 
     @Override

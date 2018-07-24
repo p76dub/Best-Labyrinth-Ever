@@ -7,7 +7,8 @@ import util.Direction;
 
 public class Room implements IRoom {
     // ATTRIBUTES
-    private final IMaze labyrinth;
+    private final IMaze maze;
+    private IItem item;
 
     // CONSTRUCTOR
     /**
@@ -22,17 +23,17 @@ public class Room implements IRoom {
         if (parent == null) {
             throw new AssertionError();
         }
-        this.labyrinth = parent;
+        this.maze = parent;
     }
 
     @Override
     public boolean canExitIn(Direction d) {
-        return false;
+        return RoomNetwork.getInstance().get(this, d) != null;
     }
 
     @Override
     public IRoom getRoomIn(Direction d) {
-        return null;
+        return RoomNetwork.getInstance().get(this, d);
     }
 
     @Override

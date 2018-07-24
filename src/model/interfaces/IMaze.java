@@ -9,6 +9,16 @@ package model.interfaces;
  */
 public interface IMaze {
 
+    class MazeGeneratorCreationException extends Exception {
+        public MazeGeneratorCreationException(String msg) {
+            super(msg);
+        }
+
+        public MazeGeneratorCreationException(Throwable cause) {
+            super(cause);
+        }
+    }
+
     // Requêtes
     /**
      * Retourne le nombre de lignes du labyrinthe
@@ -42,7 +52,7 @@ public interface IMaze {
     /**
      * On construit le labyrinthe
      */
-    void build();
+    public <T extends IMazeGenerator> void build(Class<T> generatorClass) throws MazeGeneratorCreationException;
 
     /**
      * Marque la pièce r comme visitée (utilisé lors de l'affichage du
