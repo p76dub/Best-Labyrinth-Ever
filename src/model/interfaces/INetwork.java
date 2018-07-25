@@ -3,6 +3,8 @@ package model.interfaces;
 /**
  * Un Network est un réseau d'éléments de même type. En plus des éléments (de type E), ces derniers sont reliés entre
  * eux par un type particulier (paramètre R)
+ * @param <E> type des noeuds
+ * @param <R> type des relations
  */
 public interface INetwork<E,R> {
 

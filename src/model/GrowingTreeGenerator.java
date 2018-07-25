@@ -76,31 +76,31 @@ public class GrowingTreeGenerator implements IMazeGenerator {
     @Override
     public void generate() {
         // Keep track of visited rooms
-        Deque<Entry> opened = new LinkedList<>();
+        Set<Entry> opened = new HashSet<>();
         List<Entry> closed = new ArrayList<>();
         INetwork<IRoom, Direction> network = RoomNetwork.getInstance();
 
         opened.add(pickRandomRoom());
 
         while (opened.size() != 0) {
-            final Entry src = opened.peek();
-            Map<Direction, Entry> candidates = accessibleRoomsFrom(src, (List<Entry>) opened, closed);
-            Direction d = pickRandom(new ArrayList<>(candidates.keySet()));
+            final Entry src = opened.iterator().next();
 
-            // Ajout de la pièce dans les pièces visitées
-            Entry dst = candidates.get(d);
-            if (accessibleRoomsFrom(dst, (List<Entry>) opened, closed).size() != 0) {
-                opened.push(dst);
+            Map<Direction, Entry> candidates = accessibleRoomsFrom(src, new ArrayList<>(opened), closed);
+            if (candidates.size() > 0) {
+                // Choisir une direction
+                Direction d = pickRandom(new ArrayList<>(candidates.keySet()));
+
+                // Ajout de la pièce dans les pièces visitées
+                Entry dst = candidates.get(d);
+                opened.add(dst);
+
+                // Break the wall
+                network.create(src.getRoom(), d, dst.getRoom());
             } else {
-                closed.add(dst);
+                // Ajout de la pièce dans les pièces complètement explorées
+                opened.remove(src);
+                closed.add(src);
             }
-
-            // Suppression de la pièce courante si elle n'a qu'un seul candidat
-            opened.pop();
-            closed.add(src);
-
-            // Break the wall
-            network.create(src.getRoom(), d, dst.getRoom());
         }
     }
 
