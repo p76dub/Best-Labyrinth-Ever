@@ -1,14 +1,15 @@
 package view;
 
 import model.Maze;
+import model.interfaces.IMaze;
 
 public class MazeView {
 
     //ATTRIBUTS
-    private Maze model;
+    private IMaze model;
 
     // CONSTRUCTEUR
-    public MazeView(Maze maze) {
+    public MazeView(IMaze maze) {
         createModel(maze);
         createView();
         placeComponents();
@@ -16,12 +17,12 @@ public class MazeView {
     }
 
     // REQUETES
-    public Maze getModel() {
+    public IMaze getModel() {
         return model;
     }
 
     // COMMANDES
-    public void setModel(Maze maze) {
+    public void setModel(IMaze maze) {
         model = maze;
         refresh();
     }
@@ -30,7 +31,8 @@ public class MazeView {
     private void refresh() {
     }
 
-    private void createModel() {
+    private void createModel(IMaze maze) {
+        setModel(maze);
 
     }
 
