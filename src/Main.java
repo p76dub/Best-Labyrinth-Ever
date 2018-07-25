@@ -1,6 +1,10 @@
 import model.GrowingTreeGenerator;
 import model.Maze;
+import model.RoomNetwork;
 import model.interfaces.IMaze;
+import model.interfaces.INetwork;
+import model.interfaces.IRoom;
+import util.Direction;
 
 public class Main {
     public static void main(String[] args) {
@@ -10,6 +14,21 @@ public class Main {
             maze.build(GrowingTreeGenerator.class);
         } catch (IMaze.MazeGeneratorCreationException e) {
             e.printStackTrace();
+        }
+
+        INetwork<IRoom, Direction> network = RoomNetwork.getInstance();
+
+        for (int i = 0; i < maze.rowsNb(); ++i) {
+            for (int j = 0; j < maze.colsNb(); ++j) {
+                IRoom src = maze.getRooms()[i][j];
+                for (Direction d: Direction.allDirections()) {
+                    IRoom dst = network.get(src, d);
+                    if (dst != null) {
+                        System.out.println(src + " - " + d.name() + " -> " + dst + " : " + network.get(dst, d.opposite()).equals(src));
+                        System.out.println("CanExitIn: " + src.canExitIn(d) + " - " + dst.canExitIn(d.opposite()));
+                    }
+                }
+            }
         }
     }
 }

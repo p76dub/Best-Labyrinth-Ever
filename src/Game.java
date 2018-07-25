@@ -17,7 +17,7 @@ public class Game {
     }
 
     public String describe() {
-        String result = "Labyrinthe crée\n";
+        String result = "Labyrinthe créé\n";
         IRoom [][] rooms = maze.getRooms();
         IRoom entry = maze.entry();
         IRoom exit = maze.exit();
@@ -39,7 +39,7 @@ public class Game {
             */
             //1er ligne de la pièce
             for (int j = 0; j < maze.colsNb(); j++) {
-                if (rooms[i][j].canExitIn(Direction.NORTH)) {
+                if (rooms[j][i].canExitIn(Direction.NORTH)) {
                     result += "+ ";
                 } else {
                     result += "+-";
@@ -53,7 +53,7 @@ public class Game {
 
             //2ème ligne de la pièce
             for (int j = 0; j < maze.colsNb(); j++) {
-                if (!rooms[i][j].canExitIn(Direction.EAST)) {
+                if (!rooms[j][i].canExitIn(Direction.WEST)) {
                     result += "| ";
                 } else{
                     result += "  ";
@@ -61,7 +61,7 @@ public class Game {
 
                 //ligne plus à droite
                 if (j == maze.colsNb() - 1) {
-                    if (!rooms[i][j].canExitIn(Direction.WEST)) {
+                    if (!rooms[j][i].canExitIn(Direction.EAST)) {
                         result += "|";
                     } else {
                         result += " ";
@@ -73,7 +73,7 @@ public class Game {
             //dernière ligne
             if (i == maze.colsNb() - 1) {
                 for (int j = 0; j < maze.colsNb(); j++) {
-                    if (rooms[i][j].canExitIn(Direction.SOUTH)) {
+                    if (rooms[j][i].canExitIn(Direction.SOUTH)) {
                         result += "+ ";
                     } else {
                         result += "+-";
@@ -104,17 +104,17 @@ public class Game {
         result += "Portes des directions des pièces\n";
         for (int i = 0; i < maze.rowsNb(); i++) {
             for (int j = 0; j < maze.colsNb(); j++) {
-                result += "Room["+i+"]["+j+"] = ";
-                if (!rooms[i][j].canExitIn(Direction.NORTH)) {
+                result += "Room["+j+"]["+i+"] = ";
+                if (!rooms[j][i].canExitIn(Direction.NORTH)) {
                     result += "N|";
                 }
-                if (!rooms[i][j].canExitIn(Direction.EAST)) {
-                    result += "E|";
-                }
-                if (!rooms[i][j].canExitIn(Direction.WEST)) {
+                if (!rooms[j][i].canExitIn(Direction.WEST)) {
                     result += "W|";
                 }
-                if (!rooms[i][j].canExitIn(Direction.SOUTH)) {
+                if (!rooms[j][i].canExitIn(Direction.EAST)) {
+                    result += "E|";
+                }
+                if (!rooms[j][i].canExitIn(Direction.SOUTH)) {
                     result += "S";
                 }
                 result += '\n';
@@ -124,24 +124,24 @@ public class Game {
         result += "\nVérifications des jonctions\n";
         for (int i = 0; i < maze.rowsNb(); i++) {
             for (int j = 0; j < maze.colsNb(); j++) {
-                if (rooms[i][j].canExitIn(Direction.NORTH)) {
-                    if (i > 0 && !rooms[i - 1][j].canExitIn(Direction.SOUTH)) {
-                        result += "Erreur Room["+i+"]["+j+"] vers NORD Room["+(i-1)+"]["+j+"]\n";
+                if (rooms[j][i].canExitIn(Direction.NORTH)) {
+                    if (i > 0 && !rooms[j][i - 1].canExitIn(Direction.SOUTH)) {
+                        result += "Erreur Room["+j+"]["+i+"] vers NORD Room["+(j)+"]["+(i-1)+"]\n";
                     }
                 }
-                if (rooms[i][j].canExitIn(Direction.EAST)) {
-                    if (j > 0 && !rooms[i][j-1].canExitIn(Direction.WEST)) {
-                        result += "Erreur Room["+i+"]["+j+"] vers EST Room["+i+"]["+(j-1)+"]\n";
+                if (rooms[j][i].canExitIn(Direction.WEST)) {
+                    if (j > 0 && !rooms[j - 1][i].canExitIn(Direction.EAST)) {
+                        result += "Erreur Room["+j+"]["+i+"] vers OUEST Room["+(j-1)+"]["+(i)+"]\n";
                     }
                 }
-                if (rooms[i][j].canExitIn(Direction.WEST)) {
-                    if (j < maze.colsNb() - 1 && !rooms[i][j+1].canExitIn(Direction.EAST)) {
-                        result += "Erreur Room["+i+"]["+j+"] vers OUEST Room["+i+"]["+(j+1)+"]\n";
+                if (rooms[j][i].canExitIn(Direction.EAST)) {
+                    if (j < maze.colsNb() - 1 && !rooms[j+1][i].canExitIn(Direction.WEST)) {
+                        result += "Erreur Room["+j+"]["+i+"] vers EST Room["+(j+1)+"]["+(i)+"]\n";
                     }
                 }
-                if (rooms[i][j].canExitIn(Direction.SOUTH)) {
-                    if (i < maze.rowsNb() - 1 && !rooms[i + 1][j].canExitIn(Direction.NORTH)) {
-                        result += "Erreur Room["+i+"]["+j+"] vers SUD Room["+(i+1)+"]["+j+"]\n";
+                if (rooms[j][i].canExitIn(Direction.SOUTH)) {
+                    if (i < maze.rowsNb() - 1 && !rooms[j][i +1].canExitIn(Direction.NORTH)) {
+                        result += "Erreur Room["+j+"]["+i+"] vers SUD Room["+(j)+"]["+(i+1)+"]\n";
                     }
                 }
             }
@@ -151,7 +151,7 @@ public class Game {
 
     // POINT D'ENTREE
     public static void main(String[] args) {
-        Game game = new Game(new Maze(5,5));
+        Game game = new Game(new Maze(20,20));
         try {
             game.getMaze().build(GrowingTreeGenerator.class);
             System.out.println(game.describe());

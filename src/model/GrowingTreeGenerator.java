@@ -137,14 +137,14 @@ public class GrowingTreeGenerator implements IMazeGenerator {
         if (isValidRoomCoordinates(x-1, y)) {
             Entry neighbour = new Entry(x-1, y, rooms[x-1][y]);
             if (!opened.contains(neighbour) && !closed.contains(neighbour)) {
-                result.put(Direction.EAST, neighbour);
+                result.put(Direction.WEST, neighbour);
             }
         }
 
         if (isValidRoomCoordinates(x+1, y)) {
             Entry neighbour = new Entry(x+1, y, rooms[x+1][y]);
             if (!opened.contains(neighbour) && !closed.contains(neighbour)) {
-                result.put(Direction.WEST, neighbour);
+                result.put(Direction.EAST, neighbour);
             }
         }
 

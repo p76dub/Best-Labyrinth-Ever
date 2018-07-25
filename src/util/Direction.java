@@ -22,18 +22,18 @@ public final class Direction {
 
     // Constantes
     public static final Direction NORTH = new Direction("top");
-    public static final Direction EAST  = new Direction("left");
+    public static final Direction EAST  = new Direction("right");
     public static final Direction SOUTH = new Direction("bottom");
-    public static final Direction WEST  = new Direction("right");
+    public static final Direction WEST  = new Direction("left");
 
     private static final Map<String, Direction> DIRECTIONS;
 
     static {
         DIRECTIONS = new HashMap<>();
         DIRECTIONS.put("top", NORTH);
-        DIRECTIONS.put("left", EAST);
+        DIRECTIONS.put("right", EAST);
         DIRECTIONS.put("bottom", SOUTH);
-        DIRECTIONS.put("right", WEST);
+        DIRECTIONS.put("left", WEST);
     }
 
     private static final Map<Direction, Direction> OPPOSITES;
