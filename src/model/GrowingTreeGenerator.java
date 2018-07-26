@@ -99,9 +99,17 @@ public class GrowingTreeGenerator implements IMazeGenerator {
     private IRoom princess;
 
     // CONSTRUCTEUR
+    /**
+     * Créer un nouveau GrowingTreeGenerator, en lui donnant le tableau des pièces.
+     * @param rooms l'ensemble des pièces du labyrinthe
+     * @pre rooms != null && rooms.length > 0 && rooms[0].length > 0
+     */
     public GrowingTreeGenerator(IRoom[][] rooms) {
         if (rooms == null) {
             throw new NullPointerException();
+        }
+        if (rooms.length <= 0 || rooms[0].length <= 0) {
+            throw new IllegalArgumentException();
         }
         this.rooms = rooms;
     }
@@ -197,7 +205,22 @@ public class GrowingTreeGenerator implements IMazeGenerator {
         return 0 <= x && x < getMazeWidth() && 0 <= y && y < getMazeHeight();
     }
 
+    /**
+     * Obtenir l'ensemble des pièces à côté de la pièce source. Les pièces récupérées sont toutes des pièces non
+     * visitées.
+     * @param src La pièce source
+     * @param opened la liste des pièces dites "ouvertes"
+     * @param closed la liste des pièces dites "fermées"
+     * @return la liste, éventuellement vide, des pièces correspondantes aux critères
+     * @pre <pre>
+     *      src != null
+     *      opened != null
+     *      closed != null
+     * </pre>
+     * @post accessibleRoomsFrom(src, opened, closed) != null
+     */
     private Map<Direction, Entry> accessibleRoomsFrom(Entry src, List<Entry> opened, List<Entry> closed) {
+        assert src != null && opened != null && closed != null;
         Map<Direction, Entry> result = new HashMap<>();
         final int x = src.getX();
         final int y = src.getY();
