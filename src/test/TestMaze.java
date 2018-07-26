@@ -1,14 +1,16 @@
+package test;
+
 import model.GrowingTreeGenerator;
 import model.Maze;
 import model.interfaces.IMaze;
 import model.interfaces.IRoom;
 import util.Direction;
 
-public class Game {
+public class TestMaze {
 
     private Maze maze;
 
-    public Game(Maze m) {
+    public TestMaze(Maze m) {
       this.maze = m;
     }
 
@@ -101,6 +103,7 @@ public class Game {
             */
         }
         result += '\n';
+        /*
         result += "Portes des directions des pièces\n";
         for (int i = 0; i < maze.rowsNb(); i++) {
             for (int j = 0; j < maze.colsNb(); j++) {
@@ -121,6 +124,7 @@ public class Game {
 
             }
         }
+        */
         result += "\nVérifications des jonctions\n";
         for (int i = 0; i < maze.rowsNb(); i++) {
             for (int j = 0; j < maze.colsNb(); j++) {
@@ -151,7 +155,7 @@ public class Game {
 
     // POINT D'ENTREE
     public static void main(String[] args) {
-        Game game = new Game(new Maze(20,20));
+        TestMaze game = new TestMaze(new Maze(20,20));
         try {
             game.getMaze().build(GrowingTreeGenerator.class);
             System.out.println(game.describe());
