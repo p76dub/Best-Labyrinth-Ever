@@ -6,7 +6,7 @@ import model.interfaces.IPlayer;
 import model.interfaces.IRoom;
 import util.Direction;
 
-class Player implements IPlayer {
+public class Player implements IPlayer {
     // ATTRIBUTS
     private int attackPoints;
     private int defensePoints;
@@ -38,7 +38,7 @@ class Player implements IPlayer {
      * </pre>
      */
     public Player(String name, int attack, int defense, int initialLife, IRoom room) {
-        if (name == null || room != null || attack <= 0 || defense > 100 || defense < 0 || initialLife <= 0) {
+        if (name == null || room == null || attack <= 0 || defense > 100 || defense < 0 || initialLife <= 0) {
             throw new AssertionError();
         }
         this.name = name;
@@ -46,6 +46,7 @@ class Player implements IPlayer {
         this.defensePoints = defense;
         this.lifePoints = initialLife;
         this.location = room;
+        room.setPlayer(this);
     }
 
     // REQUETES
@@ -102,7 +103,10 @@ class Player implements IPlayer {
         if (direction == null || !getRoom().canExitIn(direction)) {
             throw new AssertionError();
         }
+        IRoom oldRoom = getRoom();
+        oldRoom.setPlayer(null);
         this.location = getRoom().getRoomIn(direction);
+        getRoom().setPlayer(this);
     }
 
     @Override

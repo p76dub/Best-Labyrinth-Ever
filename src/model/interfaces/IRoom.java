@@ -2,6 +2,8 @@ package model.interfaces;
 
 import util.Direction;
 
+import java.beans.PropertyChangeListener;
+
 /**
  * Modélise les salles du labyrinthe.
  * Les salles sont reliées entre elles et le joueur les traverse.
@@ -37,4 +39,9 @@ public interface IRoom {
      * @return item
      */
     IItem getItem();
+
+    IPlayer getPlayer();
+    void setPlayer(IPlayer player);
+    void addPropertyChangeListener(String property, PropertyChangeListener l);
+    void removePropertyChangeListener(PropertyChangeListener l);
 }

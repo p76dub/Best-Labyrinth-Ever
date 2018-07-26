@@ -2,13 +2,19 @@ package model;
 
 import model.interfaces.IItem;
 import model.interfaces.IMaze;
+import model.interfaces.IPlayer;
 import model.interfaces.IRoom;
 import util.Direction;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 public class Room implements IRoom {
     // ATTRIBUTES
     private final IMaze maze;
     private IItem item;
+    private IPlayer player;
+    private PropertyChangeSupport propertySupport;
 
     // CONSTRUCTOR
     /**
@@ -19,11 +25,13 @@ public class Room implements IRoom {
      *     parent != null
      * </pre>
      */
-    Room(IMaze parent) {
+    public Room(IMaze parent) {
         if (parent == null) {
             throw new AssertionError();
         }
         this.maze = parent;
+        this.player = null;
+        propertySupport = new PropertyChangeSupport(this);
     }
 
     @Override
@@ -38,6 +46,36 @@ public class Room implements IRoom {
 
     @Override
     public IItem getItem() {
-        return null;
+        return item;
     }
+
+    @Override
+    public IPlayer getPlayer() { return player;}
+
+    @Override
+    public void setPlayer(IPlayer player) {
+        IPlayer oldPlayer = getPlayer();
+        this.player = player;
+        propertySupport.firePropertyChange("PLAYER", oldPlayer, player);
+    }
+
+    public void addPropertyChangeListener(String property,
+                                          PropertyChangeListener l) {
+        if (l != null) {
+            new AssertionError("l'écouteur est null");
+        }
+        if (propertySupport == null) {
+            propertySupport = new PropertyChangeSupport(this);
+        }
+        propertySupport.addPropertyChangeListener(property, l);
+    }
+
+    @Override
+    public void removePropertyChangeListener(PropertyChangeListener l) {
+        if (propertySupport == null) {
+            propertySupport = new PropertyChangeSupport(this);
+        }
+        propertySupport.removePropertyChangeListener(l);
+    }
+
 }
