@@ -171,33 +171,25 @@ public class Game {
     private void bottom() {
         if (getPlayer().getRoom().canExitIn(Direction.SOUTH)) {
             getPlayer().move(Direction.SOUTH);
-            System.out.println("bas");
         }
-        System.out.println("essai bas");
     }
 
     private void left() {
         if (getPlayer().getRoom().canExitIn(Direction.WEST)) {
             getPlayer().move(Direction.WEST);
-            System.out.println("gauche");
         }
-        System.out.println("essai gauche");
     }
 
     private void right() {
         if (getPlayer().getRoom().canExitIn(Direction.EAST)) {
             getPlayer().move(Direction.EAST);
-            System.out.println("droite");
         }
-        System.out.println("essai droite");
     }
 
     private void top() {
         if (getPlayer().getRoom().canExitIn(Direction.NORTH)) {
             getPlayer().move(Direction.NORTH);
-            System.out.println("haut");
         }
-        System.out.println("essai haut");
     }
 
     // LANCEUR

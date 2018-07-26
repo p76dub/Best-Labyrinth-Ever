@@ -81,6 +81,7 @@ public class RoomView extends JPanel {
                             img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
                             JLabel imageIcon = new JLabel(new ImageIcon(img));
                             image.add(imageIcon);
+                            image.revalidate();
                         } else {
                             image.removeAll();
                         }
