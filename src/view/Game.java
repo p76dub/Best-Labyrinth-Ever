@@ -3,8 +3,11 @@ package view;
 import model.GrowingTreeGenerator;
 import model.Maze;
 import model.Player;
+import model.Item;
+import model.interfaces.IItem;
 import model.interfaces.IMaze;
 import model.interfaces.IPlayer;
+import model.interfaces.IRoom;
 import util.Direction;
 
 import javax.swing.*;
@@ -12,16 +15,23 @@ import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-
-import static java.awt.Component.LEFT_ALIGNMENT;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.nio.file.Paths;
 
 public class Game {
 
     // ATTRIBUTS
     private JFrame mainFrame;
+    private JPanel panelAttack;
+    private JPanel panelDefensive;
+    private JPanel panelLife;
     private IPlayer player;
     private MazeView mazeView;
     private IMaze maze;
+    private int xItem;
+    private int yItem;
+
 
     // CONSTRUCTEUR
     public Game() {
@@ -50,8 +60,14 @@ public class Game {
     private void createModel() {
         try {
             maze = new Maze();
-            maze.build(GrowingTreeGenerator.class);
+            getMaze().build(GrowingTreeGenerator.class);
             player = new Player("player1", 5, 2, 10, maze.getRooms()[0][0]);
+            xItem = (int) (Math.random() * (getMaze().colsNb()));
+            yItem = (int) (Math.random() * (getMaze().rowsNb()));
+            IItem it = new Item("Un joli bonbon !\n Tu gagnes 5 points d'attaque, " +
+                    "3 points de défense.\n Tu perds 2 points de vie.", Paths.get(""),
+                    5, 3, -2, maze.getRooms()[xItem][yItem]);
+            getMaze().getRooms()[xItem][yItem].setItem(it);
         } catch (IMaze.MazeGeneratorCreationException e) {
             e.printStackTrace();
         }
@@ -65,6 +81,11 @@ public class Game {
         mainFrame.setPreferredSize(new Dimension(frameWidth, frameHeight));
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mazeView = new MazeView(maze);
+
+
+        panelLife = new JPanel();
+        panelAttack= new JPanel();
+        panelDefensive = new JPanel();
         //mazeView.placePlayer(0,0);
     }
 
@@ -86,16 +107,16 @@ public class Game {
             JPanel s = new JPanel(); {
                 JLabel life = new JLabel("Points vie : ");
                 s.add(life);
-                JPanel t = new JPanel(new GridLayout(1, getPlayer().getLifePoints())); {
+                panelLife = new JPanel(new GridLayout(1, getPlayer().getLifePoints())); {
                     for (int i = 0; i < getPlayer().getLifePoints(); i++) {
                         ImageIcon icon = new ImageIcon("images/coeur.png");
                         Image img = icon.getImage();
                         img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
                         JLabel imageLife = new JLabel(new ImageIcon(img));
-                        t.add(imageLife);
+                        panelLife.add(imageLife);
                     }
                 }
-                s.add(t);
+                s.add(panelLife);
             }
             listPane.add(s);
 
@@ -103,16 +124,16 @@ public class Game {
             s = new JPanel(); {
                 JLabel attack = new JLabel("Points d'attaque : ");
                 s.add(attack);
-                JPanel t = new JPanel(new GridLayout(1, getPlayer().getAttackPoints())); {
+                panelAttack = new JPanel(new GridLayout(1, getPlayer().getAttackPoints())); {
                     for (int i = 0; i < getPlayer().getAttackPoints(); i++) {
                         ImageIcon icon = new ImageIcon("images/epee.png");
                         Image img = icon.getImage();
                         img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
                         JLabel imageAttack = new JLabel(new ImageIcon(img));
-                        t.add(imageAttack);
+                        panelAttack.add(imageAttack);
                     }
                 }
-                s.add(t);
+                s.add(panelAttack);
             }
             listPane.add(s);
 
@@ -120,19 +141,16 @@ public class Game {
             s = new JPanel(); {
                 JLabel defensive = new JLabel("Points de défense : ");
                 s.add(defensive);
-                JPanel t = new JPanel(new GridLayout(1, getPlayer().getDefensivePoints())); {
+                panelDefensive = new JPanel(new GridLayout(1, getPlayer().getDefensivePoints())); {
                     for (int i = 0; i < getPlayer().getDefensivePoints(); i++) {
-                        /*
                         ImageIcon icon = new ImageIcon("images/bouclier.png");
                         Image img = icon.getImage();
                         img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
                         JLabel imageDefensive = new JLabel(new ImageIcon(img));
-                        t.add(imageDefensive);
-                        */
-                        t.add(new JLabel("B"));
+                        panelDefensive.add(imageDefensive);
                     }
                 }
-                s.add(t);
+                s.add(panelDefensive);
             }
             listPane.add(s);
 
@@ -166,6 +184,78 @@ public class Game {
                 }
             }
         });
+        //TODO A modifier
+        getMaze().getRooms()[xItem][yItem].addPropertyChangeListener("TAKE",
+            new PropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    JOptionPane.showMessageDialog(mainFrame,
+                            ((IItem) evt.getOldValue()).getMessage(),
+                            "Bonus",
+                            JOptionPane.PLAIN_MESSAGE);
+                }
+            }
+        );
+
+        getPlayer().addPropertyChangeListener("CHANGE_LIFE",
+            new PropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    panelLife.removeAll();
+                    JPanel p = new JPanel(new GridLayout(1, (int) evt.getNewValue())); {
+                        for (int i = 0; i < (int) evt.getNewValue(); i++) {
+                            ImageIcon icon = new ImageIcon("images/coeur.png");
+                            Image img = icon.getImage();
+                            img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
+                            JLabel imageLife = new JLabel(new ImageIcon(img));
+                            p.add(imageLife);
+                        }
+                        panelLife.add(p);
+                    }
+                    panelLife.revalidate();
+                }
+            }
+        );
+
+        getPlayer().addPropertyChangeListener("CHANGE_ATTACK",
+                new PropertyChangeListener() {
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        panelAttack.removeAll();
+                        JPanel p = new JPanel(new GridLayout(1, (int) evt.getNewValue())); {
+                            for (int i = 0; i < (int) evt.getNewValue(); i++) {
+                                ImageIcon icon = new ImageIcon("images/epee.png");
+                                Image img = icon.getImage();
+                                img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
+                                JLabel imageAttack = new JLabel(new ImageIcon(img));
+                                p.add(imageAttack);
+                            }
+                            panelAttack.add(p);
+                        }
+                        panelAttack.revalidate();
+                    }
+                }
+        );
+
+        getPlayer().addPropertyChangeListener("CHANGE_DEFENSIVE",
+            new PropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    panelDefensive.removeAll();
+                    JPanel p = new JPanel(new GridLayout(1, (int) evt.getNewValue())); {
+                        for (int i = 0; i < (int) evt.getNewValue(); i++) {
+                            ImageIcon icon = new ImageIcon("images/bouclier.png");
+                            Image img = icon.getImage();
+                            img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
+                            JLabel imageDefensive = new JLabel(new ImageIcon(img));
+                            p.add(imageDefensive);
+                        }
+                        panelDefensive.add(p);
+                    }
+                    panelDefensive.revalidate();
+                }
+            }
+        );
     }
 
     private void bottom() {

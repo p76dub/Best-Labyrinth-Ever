@@ -5,7 +5,7 @@ import model.interfaces.IRoom;
 
 import java.nio.file.Path;
 
-class Item implements IItem {
+public class Item implements IItem {
     // ATTRIBUTS
     private final Path image;
     private final int attack;
@@ -90,5 +90,7 @@ class Item implements IItem {
     @Override
     public void take() {
         this.taken = true;
+        //TODO changement
+        getRoom().setItem(null);
     }
 }
