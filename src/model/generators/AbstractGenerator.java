@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-abstract public class AbstractGenerator implements IMazeGenerator {
+abstract class AbstractGenerator implements IMazeGenerator {
     // ATTRIBUTES
     private final IRoom[][] rooms;
 

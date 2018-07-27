@@ -48,12 +48,6 @@ public interface IMaze {
      */
     IRoom[][] getRooms();
 
-    // Commandes
-    /**
-     * On construit le labyrinthe
-     */
-    public <T extends IMazeGenerator> void build(Class<T> generatorClass) throws MazeGeneratorCreationException;
-
     /**
      * Marque la pièce r comme visitée (utilisé lors de l'affichage du
      *  labyrinthe).

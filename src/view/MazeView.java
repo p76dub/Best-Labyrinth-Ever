@@ -1,8 +1,7 @@
 package view;
 
-import model.generators.GrowingTreeGenerator;
 import model.Maze;
-import model.Player;
+import model.generators.GeneratorFactory;
 import model.interfaces.IMaze;
 import model.interfaces.IRoom;
 
@@ -35,11 +34,7 @@ public class MazeView extends JPanel {
 
     // COMMANDES
     public void setModel(IMaze model) {
-        try {
-            model.build(GrowingTreeGenerator.class);
-        } catch (IMaze.MazeGeneratorCreationException e) {
-            e.printStackTrace();
-        }
+        GeneratorFactory.growingTreeGeneration(model);
         IRoom[][] allRooms = model.getRooms();
         for (int i = 0; i < model.colsNb(); ++i) {
             for (int j = 0; j < model.rowsNb(); ++j) {

@@ -85,19 +85,6 @@ public class Maze implements IMaze {
     }
 
     @Override
-    public <T extends IMazeGenerator> void build(Class<T> generatorClass) throws MazeGeneratorCreationException {
-        Constructor<T> constructor = null;
-        IMazeGenerator generator = null;
-        try {
-            constructor = generatorClass.getConstructor(IRoom[][].class);
-            generator = constructor.newInstance((Object) rooms);
-            generator.generate();
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            throw new IMaze.MazeGeneratorCreationException(e);
-        }
-    }
-
-    @Override
     public void mark(IRoom r) {
 
     }

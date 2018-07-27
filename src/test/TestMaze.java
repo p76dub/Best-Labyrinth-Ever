@@ -1,7 +1,7 @@
 package test;
 
-import model.generators.GrowingTreeGenerator;
 import model.Maze;
+import model.generators.GeneratorFactory;
 import model.interfaces.IMaze;
 import model.interfaces.IRoom;
 import util.Direction;
@@ -156,11 +156,7 @@ public class TestMaze {
     // POINT D'ENTREE
     public static void main(String[] args) {
         TestMaze game = new TestMaze(new Maze(20,20));
-        try {
-            game.getMaze().build(GrowingTreeGenerator.class);
-            System.out.println(game.describe());
-        } catch (IMaze.MazeGeneratorCreationException e) {
-            e.printStackTrace();
-        }
+        GeneratorFactory.growingTreeGeneration(game.getMaze());
+        System.out.println(game.describe());
     }
 }

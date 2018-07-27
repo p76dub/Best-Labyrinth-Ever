@@ -32,7 +32,7 @@ import java.util.*;
  *     <li>En choisissant une cellule parmis les N dernières explorées</li>
  * </ul>
  */
-public class GrowingTreeGenerator extends AbstractGenerator {
+class GrowingTreeGenerator extends AbstractGenerator {
     // ATTRIBUTS
     private IRoom entry;
     private IRoom exit;

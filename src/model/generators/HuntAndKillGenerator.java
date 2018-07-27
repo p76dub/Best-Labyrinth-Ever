@@ -8,7 +8,7 @@ import util.Entry;
 
 import java.util.*;
 
-public class HuntAndKillGenerator extends AbstractGenerator {
+class HuntAndKillGenerator extends AbstractGenerator {
     // ATTRIBUTS
     private final float huntProbability;
 

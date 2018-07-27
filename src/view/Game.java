@@ -1,6 +1,6 @@
 package view;
 
-import model.generators.GrowingTreeGenerator;
+import model.generators.GeneratorFactory;
 import model.Maze;
 import model.Player;
 import model.Item;
@@ -58,19 +58,15 @@ public class Game {
 
     // OUTILS
     private void createModel() {
-        try {
-            maze = new Maze();
-            getMaze().build(GrowingTreeGenerator.class);
-            player = new Player("player1", 5, 2, 10, maze.getRooms()[0][0]);
-            xItem = (int) (Math.random() * (getMaze().colsNb()));
-            yItem = (int) (Math.random() * (getMaze().rowsNb()));
-            IItem it = new Item("Un joli bonbon !\n Tu gagnes 5 points d'attaque, " +
-                    "3 points de défense.\n Tu perds 2 points de vie.", Paths.get(""),
-                    5, 3, -2, maze.getRooms()[xItem][yItem]);
-            getMaze().getRooms()[xItem][yItem].setItem(it);
-        } catch (IMaze.MazeGeneratorCreationException e) {
-            e.printStackTrace();
-        }
+        maze = new Maze();
+        GeneratorFactory.growingTreeGeneration(maze);
+        player = new Player("player1", 5, 2, 10, maze.getRooms()[0][0]);
+        xItem = (int) (Math.random() * (getMaze().colsNb()));
+        yItem = (int) (Math.random() * (getMaze().rowsNb()));
+        IItem it = new Item("Un joli bonbon !\n Tu gagnes 5 points d'attaque, " +
+                "3 points de défense.\n Tu perds 2 points de vie.", Paths.get(""),
+                5, 3, -2, maze.getRooms()[xItem][yItem]);
+        getMaze().getRooms()[xItem][yItem].setItem(it);
     }
 
     private void createView() {
