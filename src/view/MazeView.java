@@ -1,6 +1,6 @@
 package view;
 
-import model.GrowingTreeGenerator;
+import model.generators.GrowingTreeGenerator;
 import model.Maze;
 import model.Player;
 import model.interfaces.IMaze;

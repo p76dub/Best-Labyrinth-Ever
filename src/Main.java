@@ -1,4 +1,4 @@
-import model.GrowingTreeGenerator;
+import model.generators.GrowingTreeGenerator;
 import model.Maze;
 import model.RoomNetwork;
 import model.interfaces.IMaze;

@@ -1,6 +1,6 @@
 package test;
 
-import model.GrowingTreeGenerator;
+import model.generators.GrowingTreeGenerator;
 import model.Maze;
 import model.interfaces.IMaze;
 import model.interfaces.IRoom;
