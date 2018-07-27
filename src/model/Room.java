@@ -14,6 +14,7 @@ public class Room implements IRoom {
     private final IMaze maze;
     private IItem item;
     private IPlayer player;
+    private Direction direction;
     private PropertyChangeSupport propertySupport;
 
     // CONSTRUCTOR
@@ -49,14 +50,34 @@ public class Room implements IRoom {
         return item;
     }
 
+    //TODO changement
+    @Override
+    public void setItem(IItem it) {
+        IItem oldItem = getItem();
+        item = it;
+        if (it == null) {
+            propertySupport.firePropertyChange("TAKE", oldItem, it);
+        }
+    }
+
     @Override
     public IPlayer getPlayer() { return player;}
 
     @Override
-    public void setPlayer(IPlayer player) {
+    public Direction getDirection() {
+        return direction;
+    }
+
+    @Override
+    public void setPlayer(IPlayer player, Direction d) {
         IPlayer oldPlayer = getPlayer();
         this.player = player;
+        this.direction = d;
         propertySupport.firePropertyChange("PLAYER", oldPlayer, player);
+        //TODO a changer !
+        if (player != null && getItem() != null) {
+            player.take(getItem());
+        }
     }
 
     public void addPropertyChangeListener(String property,

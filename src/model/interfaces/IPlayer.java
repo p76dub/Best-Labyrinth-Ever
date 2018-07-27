@@ -1,5 +1,9 @@
 package model.interfaces;
 
+import util.Direction;
+
+import java.beans.PropertyChangeListener;
+
 public interface IPlayer extends IEntity {
 
     /**
@@ -7,4 +11,9 @@ public interface IPlayer extends IEntity {
      * @param item
      */
     void take(IItem item);
+
+    //TODO à changer
+    void addPropertyChangeListener(String property, PropertyChangeListener l);
+    void removePropertyChangeListener(PropertyChangeListener l);
+
 }

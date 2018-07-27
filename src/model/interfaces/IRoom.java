@@ -35,13 +35,21 @@ public interface IRoom {
     IRoom getRoomIn(Direction d);
 
     /**
+     * Modifie l'item de la pièce ou null s'il n'y en a pas.
+     * @param it
+     */
+    void setItem(IItem it);
+
+    /**
      * Retourne l'item de la pièce ou null s'il n'y en a pas.
      * @return item
      */
     IItem getItem();
 
+    //TODO à supprimer
     IPlayer getPlayer();
-    void setPlayer(IPlayer player);
+    Direction getDirection();
+    void setPlayer(IPlayer player, Direction d);
     void addPropertyChangeListener(String property, PropertyChangeListener l);
     void removePropertyChangeListener(PropertyChangeListener l);
 }

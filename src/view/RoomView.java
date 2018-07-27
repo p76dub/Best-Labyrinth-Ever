@@ -60,6 +60,13 @@ public class RoomView extends JPanel {
             JLabel imageIcon = new JLabel(new ImageIcon(img));
             image.add(imageIcon);
         }
+        if (model.getItem() != null) {
+            ImageIcon icon = new ImageIcon("images/bonbon.png");
+            Image img = icon.getImage();
+            img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
+            JLabel imageIcon = new JLabel(new ImageIcon(img));
+            image.add(imageIcon);
+        }
         image.setBackground(DEFAULT_BACKGROUND);
         this.setPreferredSize(new Dimension(SIZE, SIZE));
         refresh();
@@ -72,20 +79,31 @@ public class RoomView extends JPanel {
 
     private void createController() {
         model.addPropertyChangeListener("PLAYER",
-                new PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        if (evt.getNewValue() != null) {
-                            ImageIcon icon = new ImageIcon("images/player.png");
-                            Image img = icon.getImage();
-                            img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
-                            JLabel imageIcon = new JLabel(new ImageIcon(img));
-                            image.add(imageIcon);
-                        } else {
-                            image.removeAll();
+            new PropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    image.removeAll();
+                    if (evt.getNewValue() != null) {
+                        String direction = "";
+                        if (model.getDirection() == Direction.NORTH) {
+                            direction = "_top";
                         }
+                        if (model.getDirection() == Direction.WEST) {
+                            direction = "_left";
+                        }
+                        if (model.getDirection() == Direction.SOUTH) {
+                            direction = "_bottom";
+                        }
+                        ImageIcon icon = new ImageIcon("images/player"+direction+".png");
+                        Image img = icon.getImage();
+                        img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
+                        JLabel imageIcon = new JLabel(new ImageIcon(img));
+                        image.add(imageIcon);
+                        image.revalidate();
                     }
-                });
+                }
+            }
+        );
     }
     // TEST
     public static void main(String[] args) {
