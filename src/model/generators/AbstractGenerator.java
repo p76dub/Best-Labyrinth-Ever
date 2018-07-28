@@ -5,10 +5,7 @@ import model.interfaces.IRoom;
 import util.Direction;
 import util.Entry;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 abstract class AbstractGenerator implements IMazeGenerator {
     // ATTRIBUTES
@@ -93,7 +90,7 @@ abstract class AbstractGenerator implements IMazeGenerator {
      * </pre>
      * @post accessibleRoomsFrom(src, opened, closed) != null
      */
-    protected Map<Direction, Entry> accessibleRoomsFrom(Entry src, List<Entry> opened, List<Entry> closed) {
+    protected Map<Direction, Entry> accessibleRoomsFrom(Entry src, Collection<Entry> opened, Collection<Entry> closed) {
         assert src != null && opened != null && closed != null;
         Map<Direction, Entry> result = new HashMap<>();
         final int x = src.getX();

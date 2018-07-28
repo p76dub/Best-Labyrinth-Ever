@@ -82,7 +82,7 @@ public class Room implements IRoom {
 
     public void addPropertyChangeListener(String property,
                                           PropertyChangeListener l) {
-        if (l != null) {
+        if (l == null) {
             throw new AssertionError("l'écouteur est null");
         }
         if (propertySupport == null) {
