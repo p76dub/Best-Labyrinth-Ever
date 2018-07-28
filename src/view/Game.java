@@ -59,7 +59,7 @@ public class Game {
     // OUTILS
     private void createModel() {
         maze = new Maze();
-        GeneratorFactory.growingTreeGeneration(maze);
+        GeneratorFactory.huntAndKillGeneration(maze, 0.4F);
         player = new Player("player1", 5, 2, 10, maze.getRooms()[0][0]);
         xItem = (int) (Math.random() * (getMaze().colsNb()));
         yItem = (int) (Math.random() * (getMaze().rowsNb()));
