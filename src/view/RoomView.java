@@ -56,14 +56,14 @@ public class RoomView extends JPanel {
         if (model.getPlayer() != null) {
             ImageIcon icon = new ImageIcon("images/player.png");
             Image img = icon.getImage();
-            img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
+            img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
             JLabel imageIcon = new JLabel(new ImageIcon(img));
             image.add(imageIcon);
         }
         if (model.getItem() != null) {
             ImageIcon icon = new ImageIcon("images/bonbon.png");
             Image img = icon.getImage();
-            img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
+            img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
             JLabel imageIcon = new JLabel(new ImageIcon(img));
             image.add(imageIcon);
         }
@@ -96,7 +96,7 @@ public class RoomView extends JPanel {
                         }
                         ImageIcon icon = new ImageIcon("images/player"+direction+".png");
                         Image img = icon.getImage();
-                        img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
+                        img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
                         JLabel imageIcon = new JLabel(new ImageIcon(img));
                         image.add(imageIcon);
                         image.revalidate();

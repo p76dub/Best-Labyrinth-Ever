@@ -7,7 +7,6 @@ import model.Item;
 import model.interfaces.IItem;
 import model.interfaces.IMaze;
 import model.interfaces.IPlayer;
-import model.interfaces.IRoom;
 import util.Direction;
 
 import javax.swing.*;
@@ -18,14 +17,13 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.nio.file.Paths;
+import java.util.Random;
 
 public class Game {
 
     // ATTRIBUTS
     private JFrame mainFrame;
-    private JPanel panelAttack;
-    private JPanel panelDefensive;
-    private JPanel panelLife;
+    private PointsPlayerView pointsPlayer;
     private IPlayer player;
     private MazeView mazeView;
     private IMaze maze;
@@ -58,9 +56,20 @@ public class Game {
 
     // OUTILS
     private void createModel() {
+        final int MAX_INITIAL_ATTACK_POINTS = 20;
+        final int MAX_INITIAL_DEFENSIVE_POINTS = 20;
+        final int MAX_INITIAL_LIVE_POINTS = 20;
+        final int MIN_INITIAL_LIVE_POINTS = 5;
+
         maze = new Maze();
-        GeneratorFactory.huntAndKillGeneration(maze, 0.4F);
-        player = new Player("player1", 5, 2, 10, maze.getRooms()[0][0]);
+        GeneratorFactory.backTrackingGenerator(maze);
+        Random random = new Random();
+        int attackPoints = random.nextInt(MAX_INITIAL_ATTACK_POINTS) + 1;
+        int defensivePoints = random.nextInt(MAX_INITIAL_DEFENSIVE_POINTS) + 1;
+        int livePoints =  random.nextInt(MAX_INITIAL_LIVE_POINTS - MIN_INITIAL_LIVE_POINTS) + MIN_INITIAL_LIVE_POINTS;
+
+        //TODO à changer
+        player = new Player("test", attackPoints, defensivePoints, livePoints,  maze.getRooms()[0][0]);
         xItem = (int) (Math.random() * (getMaze().colsNb()));
         yItem = (int) (Math.random() * (getMaze().rowsNb()));
         IItem it = new Item("Un joli bonbon !\n Tu gagnes 5 points d'attaque, " +
@@ -79,78 +88,19 @@ public class Game {
         mazeView = new MazeView(maze);
 
 
-        panelLife = new JPanel();
-        panelAttack= new JPanel();
-        panelDefensive = new JPanel();
+        pointsPlayer = new PointsPlayerView(getPlayer());
         //mazeView.placePlayer(0,0);
     }
 
     private void placeComponents() {
         mainFrame.setLayout(new BorderLayout()); {
 
-            //alignement des composants verticalement
-            JPanel listPane = new JPanel();
-            listPane.setLayout(new BoxLayout(listPane, BoxLayout.PAGE_AXIS));
-
             //ajout du composant labyrinthe
             mazeView.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
-            listPane.add(mazeView);
+            mainFrame.add(mazeView, BorderLayout.NORTH);
 
-            //ajout d'un espèce
-            listPane.add(new JPanel());
-
-            //ajout des points de vie
-            JPanel s = new JPanel(); {
-                JLabel life = new JLabel("Points vie : ");
-                s.add(life);
-                panelLife = new JPanel(new GridLayout(1, getPlayer().getLifePoints())); {
-                    for (int i = 0; i < getPlayer().getLifePoints(); i++) {
-                        ImageIcon icon = new ImageIcon("images/coeur.png");
-                        Image img = icon.getImage();
-                        img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
-                        JLabel imageLife = new JLabel(new ImageIcon(img));
-                        panelLife.add(imageLife);
-                    }
-                }
-                s.add(panelLife);
-            }
-            listPane.add(s);
-
-            //ajout des points d'attaque
-            s = new JPanel(); {
-                JLabel attack = new JLabel("Points d'attaque : ");
-                s.add(attack);
-                panelAttack = new JPanel(new GridLayout(1, getPlayer().getAttackPoints())); {
-                    for (int i = 0; i < getPlayer().getAttackPoints(); i++) {
-                        ImageIcon icon = new ImageIcon("images/epee.png");
-                        Image img = icon.getImage();
-                        img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
-                        JLabel imageAttack = new JLabel(new ImageIcon(img));
-                        panelAttack.add(imageAttack);
-                    }
-                }
-                s.add(panelAttack);
-            }
-            listPane.add(s);
-
-            //ajout des points de défense
-            s = new JPanel(); {
-                JLabel defensive = new JLabel("Points de défense : ");
-                s.add(defensive);
-                panelDefensive = new JPanel(new GridLayout(1, getPlayer().getDefensivePoints())); {
-                    for (int i = 0; i < getPlayer().getDefensivePoints(); i++) {
-                        ImageIcon icon = new ImageIcon("images/bouclier.png");
-                        Image img = icon.getImage();
-                        img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
-                        JLabel imageDefensive = new JLabel(new ImageIcon(img));
-                        panelDefensive.add(imageDefensive);
-                    }
-                }
-                s.add(panelDefensive);
-            }
-            listPane.add(s);
-
-            mainFrame.add(listPane);
+            //ajout les points du joueur
+            mainFrame.add(pointsPlayer, BorderLayout.SOUTH);
         }
     }
 
@@ -189,66 +139,6 @@ public class Game {
                             ((IItem) evt.getOldValue()).getMessage(),
                             "Bonus",
                             JOptionPane.PLAIN_MESSAGE);
-                }
-            }
-        );
-
-        getPlayer().addPropertyChangeListener("CHANGE_LIFE",
-            new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    panelLife.removeAll();
-                    JPanel p = new JPanel(new GridLayout(1, (int) evt.getNewValue())); {
-                        for (int i = 0; i < (int) evt.getNewValue(); i++) {
-                            ImageIcon icon = new ImageIcon("images/coeur.png");
-                            Image img = icon.getImage();
-                            img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
-                            JLabel imageLife = new JLabel(new ImageIcon(img));
-                            p.add(imageLife);
-                        }
-                        panelLife.add(p);
-                    }
-                    panelLife.revalidate();
-                }
-            }
-        );
-
-        getPlayer().addPropertyChangeListener("CHANGE_ATTACK",
-                new PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        panelAttack.removeAll();
-                        JPanel p = new JPanel(new GridLayout(1, (int) evt.getNewValue())); {
-                            for (int i = 0; i < (int) evt.getNewValue(); i++) {
-                                ImageIcon icon = new ImageIcon("images/epee.png");
-                                Image img = icon.getImage();
-                                img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
-                                JLabel imageAttack = new JLabel(new ImageIcon(img));
-                                p.add(imageAttack);
-                            }
-                            panelAttack.add(p);
-                        }
-                        panelAttack.revalidate();
-                    }
-                }
-        );
-
-        getPlayer().addPropertyChangeListener("CHANGE_DEFENSIVE",
-            new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    panelDefensive.removeAll();
-                    JPanel p = new JPanel(new GridLayout(1, (int) evt.getNewValue())); {
-                        for (int i = 0; i < (int) evt.getNewValue(); i++) {
-                            ImageIcon icon = new ImageIcon("images/bouclier.png");
-                            Image img = icon.getImage();
-                            img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
-                            JLabel imageDefensive = new JLabel(new ImageIcon(img));
-                            p.add(imageDefensive);
-                        }
-                        panelDefensive.add(p);
-                    }
-                    panelDefensive.revalidate();
                 }
             }
         );
