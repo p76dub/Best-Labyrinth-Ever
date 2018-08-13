@@ -12,7 +12,7 @@ import util.Direction;
  *     getLifePoints() >= 0
  *     isDead() <-> getLifePoints() == 0
  *     getRoom() != null
- *
+ *     getOrientation() != null
  * </pre>
  */
 public interface IEntity {
@@ -54,6 +54,11 @@ public interface IEntity {
      */
     IRoom getRoom();
 
+    /**
+     * Obtenir l'orientation du joueur.
+     */
+    Direction getOrientation();
+
     // Commandes
     /**
      * L'entité attaque une autre entité.
@@ -80,4 +85,12 @@ public interface IEntity {
      * @post getLifePoints() == points
      */
     void setLifePoints(int points);
+
+    /**
+     * Modifier l'orientation du joueur.
+     * @param d la direction dans laquelle est tourné le joueur.
+     * @pre d != null
+     * @post getOrientation().equals(d);
+     */
+    void setOrientation(Direction d);
 }

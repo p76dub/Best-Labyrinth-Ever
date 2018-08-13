@@ -6,6 +6,7 @@ import model.interfaces.IRoom;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Random;
 
 public class Maze implements IMaze {
     // STATICS
@@ -14,6 +15,8 @@ public class Maze implements IMaze {
 
     // ATTRIBUTS
     private final IRoom[][] rooms;
+    private final IRoom entry;
+    private final IRoom exit;
 
     // CONSTRUCTOR
     /**
@@ -40,6 +43,8 @@ public class Maze implements IMaze {
                 rooms[i][j] = new Room(this);
             }
         }
+        entry = pickRandomRoom();
+        exit = pickRandomRoom();
     }
 
     /**
@@ -71,12 +76,12 @@ public class Maze implements IMaze {
 
     @Override
     public IRoom entry() {
-        return null;
+        return entry;
     }
 
     @Override
     public IRoom exit() {
-        return null;
+        return exit;
     }
 
     @Override
@@ -87,5 +92,13 @@ public class Maze implements IMaze {
     @Override
     public void mark(IRoom r) {
 
+    }
+
+    // OUTILS
+    private IRoom pickRandomRoom() {
+        Random generator = new Random();
+        int x = generator.nextInt(rowsNb());
+        int y = generator.nextInt(colsNb());
+        return getRooms()[x][y];
     }
 }

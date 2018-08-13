@@ -1,20 +1,20 @@
 package model;
 
-import model.interfaces.IItem;
-import model.interfaces.IMaze;
-import model.interfaces.IPlayer;
-import model.interfaces.IRoom;
+import model.interfaces.*;
 import util.Direction;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Collection;
 
 public class Room implements IRoom {
+    //STATICS
+    public static final String ENTITIES_PROPERTY = "entities";
+
     // ATTRIBUTES
     private final IMaze maze;
     private IItem item;
-    private IPlayer player;
-    private Direction direction;
     private PropertyChangeSupport propertySupport;
 
     // CONSTRUCTOR
@@ -31,8 +31,17 @@ public class Room implements IRoom {
             throw new AssertionError();
         }
         this.maze = parent;
-        this.player = null;
         propertySupport = new PropertyChangeSupport(this);
+
+        EntityPositionKeeper.getInstance().addPropertyChangeListener(
+            EntityPositionKeeper.ROOM_PROPERTY,
+            evt -> {
+                IRoom updatedRoom = (IRoom) evt.getNewValue();
+                if (updatedRoom.equals(Room.this)) {
+                    Room.this.propertySupport.firePropertyChange(ENTITIES_PROPERTY, null, getEntities());
+                }
+            }
+        );
     }
 
     @Override
@@ -61,23 +70,8 @@ public class Room implements IRoom {
     }
 
     @Override
-    public IPlayer getPlayer() { return player;}
-
-    @Override
-    public Direction getDirection() {
-        return direction;
-    }
-
-    @Override
-    public void setPlayer(IPlayer player, Direction d) {
-        IPlayer oldPlayer = getPlayer();
-        this.player = player;
-        this.direction = d;
-        propertySupport.firePropertyChange("PLAYER", oldPlayer, player);
-        //TODO a changer !
-        if (player != null && getItem() != null) {
-            player.take(getItem());
-        }
+    public Collection<IEntity> getEntities() {
+        return EntityPositionKeeper.getInstance().getEntities(this);
     }
 
     public void addPropertyChangeListener(String property,
@@ -98,4 +92,6 @@ public class Room implements IRoom {
         }
         propertySupport.removePropertyChangeListener(l);
     }
+
+    // OUTILS
 }

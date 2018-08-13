@@ -10,25 +10,30 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 public class Player implements IPlayer {
+    // STATICS
+    public static final String POSITION = "position";
+    public static final String DEFENSE = "defense";
+    public static final String ATTACK = "attack";
+    public static final String LIFE = "life";
+
     // ATTRIBUTS
     private int attackPoints;
     private int defensePoints;
     private int lifePoints;
-    private IRoom location;
     private final String name;
     private PropertyChangeSupport propertySupport;
+    private Direction orientation;
 
     // CONSTRUCTEUR
     /**
-     * Créer un nouveau joueur, avec un nom, des points d'attaque, de défense et un nombre de points de vie.
+     * Créer un nouveau joueur, avec un nom, des points d'attaque, de défense et un nombre de points de vie. Le joueur
+     * est initialement tourné vers la droite.
      * @param name le nom du joueur
      * @param attack ses points d'attaque
      * @param defense ses points de défense
      * @param initialLife quantité de vie initialement
-     * @param room la pièce de départ
      * @pre <pre>
      *     name != null
-     *     room != null
      *     attack > 0
      *     0 <= defense <= 100
      *     initialLife > 0
@@ -38,20 +43,19 @@ public class Player implements IPlayer {
      *     getAttackPoints() == attack
      *     getDefensePoints() == defense
      *     getLifePoints() == initialLife
-     *     getRoom() == room
+     *     getOrientation().equals(Direction.EAST)
      * </pre>
      */
-    public Player(String name, int attack, int defense, int initialLife, IRoom room) {
-        if (name == null || room == null || attack <= 0 || defense > 100 || defense < 0 || initialLife <= 0) {
+    public Player(String name, int attack, int defense, int initialLife) {
+        if (name == null || attack <= 0 || defense > 100 || defense < 0 || initialLife <= 0) {
             throw new AssertionError();
         }
         this.name = name;
         this.attackPoints = attack;
         this.defensePoints = defense;
         this.lifePoints = initialLife;
-        this.location = room;
-        room.setPlayer(this, null);
         propertySupport = new PropertyChangeSupport(this);
+        this.orientation = Direction.EAST;
     }
 
     // REQUETES
@@ -82,7 +86,12 @@ public class Player implements IPlayer {
 
     @Override
     public IRoom getRoom() {
-        return location;
+        return EntityPositionKeeper.getInstance().getPosition(this);
+    }
+
+    @Override
+    public Direction getOrientation() {
+        return orientation;
     }
 
     // COMMANDES
@@ -91,13 +100,15 @@ public class Player implements IPlayer {
         int oldDefensivePoints = getDefensivePoints();
         int oldAttackPoints = getAttackPoints();
         int oldLifePoints = getLifePoints();
+
         this.defensePoints = Math.max(Math.min(100, this.defensePoints + item.getDefensivePoints()), 0);
         this.attackPoints = Math.max(0, this.attackPoints + item.getAttackPoints());
         this.lifePoints = Math.max(0, this.lifePoints + item.getLifePoints());
         item.take();
-        propertySupport.firePropertyChange("CHANGE_DEFENSIVE", oldDefensivePoints, getDefensivePoints());
-        propertySupport.firePropertyChange("CHANGE_ATTACK", oldAttackPoints, getAttackPoints());
-        propertySupport.firePropertyChange("CHANGE_LIFE", oldLifePoints, getLifePoints());
+
+        propertySupport.firePropertyChange(DEFENSE, oldDefensivePoints, getDefensivePoints());
+        propertySupport.firePropertyChange(ATTACK, oldAttackPoints, getAttackPoints());
+        propertySupport.firePropertyChange(LIFE, oldLifePoints, getLifePoints());
     }
 
     @Override
@@ -114,10 +125,10 @@ public class Player implements IPlayer {
         if (direction == null || !getRoom().canExitIn(direction)) {
             throw new AssertionError();
         }
-        IRoom oldRoom = getRoom();
-        oldRoom.setPlayer(null,  null);
-        this.location = getRoom().getRoomIn(direction);
-        getRoom().setPlayer(this, direction);
+        IRoom old = getRoom();
+        IRoom newRoom = old.getRoomIn(direction);
+        EntityPositionKeeper.getInstance().move(this, newRoom);
+        propertySupport.firePropertyChange(POSITION, old, newRoom);
     }
 
     @Override
@@ -128,10 +139,17 @@ public class Player implements IPlayer {
         this.lifePoints = points;
     }
 
-    public void addPropertyChangeListener(String property,
-                                          PropertyChangeListener l) {
-        if (l != null) {
-            new AssertionError("l'écouteur est null");
+    @Override
+    public void setOrientation(Direction d) {
+        if (d == null) {
+            throw new NullPointerException();
+        }
+        orientation = d;
+    }
+
+    public void addPropertyChangeListener(String property, PropertyChangeListener l) {
+        if (l == null) {
+            throw new AssertionError("l'écouteur est null");
         }
         if (propertySupport == null) {
             propertySupport = new PropertyChangeSupport(this);

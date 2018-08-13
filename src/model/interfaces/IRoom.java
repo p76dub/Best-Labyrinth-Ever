@@ -3,6 +3,7 @@ package model.interfaces;
 import util.Direction;
 
 import java.beans.PropertyChangeListener;
+import java.util.Collection;
 
 /**
  * Modélise les salles du labyrinthe.
@@ -47,9 +48,9 @@ public interface IRoom {
     IItem getItem();
 
     //TODO à supprimer
-    IPlayer getPlayer();
-    Direction getDirection();
-    void setPlayer(IPlayer player, Direction d);
+    Collection<IEntity> getEntities();
+
     void addPropertyChangeListener(String property, PropertyChangeListener l);
+
     void removePropertyChangeListener(PropertyChangeListener l);
 }

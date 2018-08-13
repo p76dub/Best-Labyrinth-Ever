@@ -14,7 +14,6 @@ public class GameModel {
     public final int MAX_INITIAL_LIVE_POINTS = 20;
     public final int MIN_INITIAL_LIVE_POINTS = 5;
 
-
     public final int MAX_ITEM_ATTACK_POINTS = 5;
     public final int MAX_ITEM_DEFENSIVE_POINTS = 5;
     public final int MAX_ITEM_LIVE_POINTS = 10;
@@ -58,7 +57,7 @@ public class GameModel {
         int attackPoints = (int) (Math.random() * (MAX_INITIAL_ATTACK_POINTS + 1));
         int defensivePoints = (int) (Math.random() * (MAX_INITIAL_DEFENSIVE_POINTS + 1));
         int livePoints = (int) (Math.random() * (MAX_INITIAL_LIVE_POINTS - MIN_INITIAL_LIVE_POINTS + 1) + MIN_INITIAL_LIVE_POINTS);
-        this.player = new Player(name, attackPoints, defensivePoints, livePoints, null);
+        this.player = new Player(name, attackPoints, defensivePoints, livePoints);
     }
 
     public void setMaze(IMaze maze) {
