@@ -1,5 +1,6 @@
 package view;
 
+import model.EntityPositionKeeper;
 import model.generators.GeneratorFactory;
 import model.Maze;
 import model.Player;
@@ -69,7 +70,8 @@ public class Game {
         int livePoints =  random.nextInt(MAX_INITIAL_LIVE_POINTS - MIN_INITIAL_LIVE_POINTS) + MIN_INITIAL_LIVE_POINTS;
 
         //TODO à changer
-        player = new Player("test", attackPoints, defensivePoints, livePoints,  maze.getRooms()[0][0]);
+        player = new Player("test", attackPoints, defensivePoints, livePoints);
+        EntityPositionKeeper.getInstance().registerEntity(player, maze.getRooms()[0][0]);
         xItem = (int) (Math.random() * (getMaze().colsNb()));
         yItem = (int) (Math.random() * (getMaze().rowsNb()));
         IItem it = new Item("Un joli bonbon !\n Tu gagnes 5 points d'attaque, " +

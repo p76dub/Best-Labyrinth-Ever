@@ -89,7 +89,7 @@ public class MazeView extends JPanel {
             IMaze model;
             public Bla() {
                 model = new Maze();
-                GeneratorFactory.backTrackingGenerator(model);
+                GeneratorFactory.huntAndKillGeneration(model, 0.9F);
                 mainFrame.add(new MazeView(model), BorderLayout.CENTER);
                 mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             }

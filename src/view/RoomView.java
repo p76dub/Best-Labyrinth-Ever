@@ -11,11 +11,11 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class RoomView extends JPanel {
+    // STATICS
+    public static final Color DEFAULT_BACKGROUND = Color.WHITE;
+    private static final int SIZE = 30;
 
     // ATTRIBUTS
-    public static final Color DEFAULT_BACKGROUND = Color.WHITE;
-    private final int SIZE = 30;
-
     private IRoom model;
     private JPanel image;
 
@@ -53,7 +53,8 @@ public class RoomView extends JPanel {
 
     private void createView() {
         image = new JPanel();
-        if (model.getPlayer() != null) {
+        if (model.getEntities().size() != 0) {
+            // FIXME: temporaire, le joueur n'a pour le moment pas d'ennemis
             ImageIcon icon = new ImageIcon("images/player.png");
             Image img = icon.getImage();
             img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
@@ -85,6 +86,7 @@ public class RoomView extends JPanel {
                     image.removeAll();
                     if (evt.getNewValue() != null) {
                         String direction = "";
+                        /*
                         if (model.getDirection() == Direction.NORTH) {
                             direction = "_top";
                         }
@@ -93,7 +95,7 @@ public class RoomView extends JPanel {
                         }
                         if (model.getDirection() == Direction.SOUTH) {
                             direction = "_bottom";
-                        }
+                        }*/
                         ImageIcon icon = new ImageIcon("images/player"+direction+".png");
                         Image img = icon.getImage();
                         img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);

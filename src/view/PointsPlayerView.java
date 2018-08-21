@@ -1,5 +1,6 @@
 package view;
 
+import model.EntityPositionKeeper;
 import model.Maze;
 import model.Player;
 import model.interfaces.IMaze;
@@ -184,7 +185,8 @@ public class PointsPlayerView extends JPanel {
                 //TODO à changer disparaitre room & maze
                 IMaze maze = new Maze();
                 System.out.println(attackPoints +"/"+defensivePoints+"/"+livePoints);
-                player = new Player("test", attackPoints, defensivePoints, livePoints, maze.getRooms()[0][0]);
+                player = new Player("test", attackPoints, defensivePoints, livePoints);
+                EntityPositionKeeper.getInstance().registerEntity(player, maze.getRooms()[0][0]);
                 mainFrame.add(new PointsPlayerView(player), BorderLayout.CENTER);
                 mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             }
