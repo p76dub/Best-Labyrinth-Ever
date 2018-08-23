@@ -5,50 +5,50 @@ import model.interfaces.IEnemy;
 import model.interfaces.IEntity;
 import model.interfaces.IRoom;
 import util.Direction;
+import util.agent.Agent;
+import util.agent.IBehaviour;
 
-import java.nio.file.Path;
+import java.net.URI;
+import java.util.Collection;
 
 
-class Enemy implements IEnemy {
+class Enemy extends Agent implements IEnemy {
     // ATTRIBUTS
-    private final Path imagePath;
+    private final URI imagePath;
     private final String message;
-    private final String name;
     private final int attack;
     private final int defense;
     private int life;
     private Direction orientation;
 
     // CONSTRUCTEUR
-    public Enemy(String name, String message, Path imagePath, int attack, int defense, int life) {
-        if (name == null || message == null || imagePath == null) {
+    public Enemy(String name, String message, URI imagePath, int attack, int defense, int life, Collection<IBehaviour> behaviours) {
+        super(name);
+        if (name == null || message == null || imagePath == null || behaviours == null) {
             throw new NullPointerException();
         }
         if (0 >= attack || 0 > defense || defense > 100 || life <= 0) {
             throw new IllegalArgumentException();
         }
-        this.name = name;
         this.message = message;
         this.imagePath = imagePath;
         this.attack = attack;
         this.defense = defense;
         this.life = life;
         this.orientation = Direction.EAST;
+        for (IBehaviour b: behaviours) {
+            this.addBehaviour(b);
+        }
     }
 
     @Override
-    public Path getImagePath() {
+    public URI getImagePath() {
         return this.imagePath;
     }
 
     @Override
     public String getMessage() {
         return this.message;
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
     }
 
     @Override

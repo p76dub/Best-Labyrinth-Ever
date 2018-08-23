@@ -1,6 +1,6 @@
 package model.interfaces;
 
-import java.nio.file.Path;
+import java.net.URI;
 
 /**
  * Interface décrivant les possibilités des ennemis. En plus des méthodes déclarées dans l'interface IEntity, les
@@ -16,7 +16,7 @@ public interface IEnemy extends IEntity {
      * Retourne le chemin vers l'image de l'ennemi.
      * @return nameImage
      */
-    Path getImagePath();
+    URI getImagePath();
 
     /**
      * Retourne le message affiché lorsque l'ennemy rencontre le joueur.

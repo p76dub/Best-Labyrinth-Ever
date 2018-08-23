@@ -11,6 +11,7 @@ import java.util.Collection;
 public class Room implements IRoom {
     //STATICS
     public static final String ENTITIES_PROPERTY = "entities";
+    public static final String ITEM_PROPERTY = "item";
 
     // ATTRIBUTES
     private final IMaze maze;
@@ -59,13 +60,12 @@ public class Room implements IRoom {
         return item;
     }
 
-    //TODO changement
     @Override
     public void setItem(IItem it) {
         IItem oldItem = getItem();
         item = it;
         if (it == null) {
-            propertySupport.firePropertyChange("TAKE", oldItem, it);
+            propertySupport.firePropertyChange(ITEM_PROPERTY, oldItem, it);
         }
     }
 
@@ -74,6 +74,7 @@ public class Room implements IRoom {
         return EntityPositionKeeper.getInstance().getEntities(this);
     }
 
+    @Override
     public void addPropertyChangeListener(String property,
                                           PropertyChangeListener l) {
         if (l == null) {

@@ -47,7 +47,6 @@ public interface IRoom {
      */
     IItem getItem();
 
-    //TODO à supprimer
     Collection<IEntity> getEntities();
 
     void addPropertyChangeListener(String property, PropertyChangeListener l);
