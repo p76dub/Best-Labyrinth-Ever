@@ -42,7 +42,7 @@ class Enemy extends Agent implements IEnemy {
     }
 
     @Override
-    public URI getImagePath() {
+    public URI getMazeImagePath() {
         return this.imagePath;
     }
 

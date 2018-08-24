@@ -24,7 +24,7 @@ public class Princess implements IPrincess {
      * </pre>
      * @post <pre>
      *     getMessage().equals(message)
-     *     getImagePath().equals(image)
+     *     getMazeImagePath().equals(image)
      *     getRoom().equals(room)
      *     !safe
      * </pre>

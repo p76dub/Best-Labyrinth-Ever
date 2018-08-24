@@ -8,6 +8,10 @@ import util.Direction;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.net.URI;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Player implements IPlayer {
     // STATICS
@@ -23,6 +27,7 @@ public class Player implements IPlayer {
     private final String name;
     private PropertyChangeSupport propertySupport;
     private Direction orientation;
+    private final Map<Direction, URI> images;
 
     // CONSTRUCTEUR
     /**
@@ -46,7 +51,7 @@ public class Player implements IPlayer {
      *     getOrientation().equals(Direction.EAST)
      * </pre>
      */
-    public Player(String name, int attack, int defense, int initialLife) {
+    public Player(String name, int attack, int defense, int initialLife, Map<Direction, URI> images) {
         if (name == null || attack <= 0 || defense > 100 || defense < 0 || initialLife <= 0) {
             throw new AssertionError();
         }
@@ -56,6 +61,7 @@ public class Player implements IPlayer {
         this.lifePoints = initialLife;
         propertySupport = new PropertyChangeSupport(this);
         this.orientation = Direction.EAST;
+        this.images = new HashMap<>(images);
     }
 
     // REQUETES
@@ -92,6 +98,11 @@ public class Player implements IPlayer {
     @Override
     public Direction getOrientation() {
         return orientation;
+    }
+
+    @Override
+    public URI getMazeImagePath() {
+        return images.get(getOrientation());
     }
 
     // COMMANDES

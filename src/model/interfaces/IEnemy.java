@@ -1,5 +1,7 @@
 package model.interfaces;
 
+import util.agent.IAgent;
+
 import java.net.URI;
 
 /**
@@ -9,15 +11,8 @@ import java.net.URI;
  *     getName() != null
  * </pre>
  */
-public interface IEnemy extends IEntity {
-
+public interface IEnemy extends IEntity, IAgent {
     // Requêtes
-    /**
-     * Retourne le chemin vers l'image de l'ennemi.
-     * @return nameImage
-     */
-    URI getImagePath();
-
     /**
      * Retourne le message affiché lorsque l'ennemy rencontre le joueur.
      * @return message

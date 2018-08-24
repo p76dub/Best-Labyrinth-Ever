@@ -1,7 +1,5 @@
 package model.interfaces;
 
-import util.Direction;
-
 import java.beans.PropertyChangeListener;
 
 public interface IPlayer extends IEntity {

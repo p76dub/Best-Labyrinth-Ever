@@ -32,7 +32,7 @@ public class Item implements IItem {
      * </pre>
      * @post <pre>
      *     getMessage().equals(message)
-     *     getImagePath().equals(image)
+     *     getMazeImagePath().equals(image)
      *     getAttackPoints() == attack
      *     getDefensivePoints() == defense
      *     getLifePoints() == life
