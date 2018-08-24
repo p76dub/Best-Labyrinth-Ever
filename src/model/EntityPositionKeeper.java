@@ -70,14 +70,13 @@ public class EntityPositionKeeper {
         }
         IRoom old = positions.get(entity);
         reversed.get(old).remove(entity);
-        propertySupport.firePropertyChange(ROOM_PROPERTY, null, old);
 
         positions.put(entity, room);
         if (!reversed.containsKey(room)) {
             reversed.put(room, new HashSet<>());
         }
         reversed.get(room).add(entity);
-        propertySupport.firePropertyChange(ROOM_PROPERTY, null, room);
+        propertySupport.firePropertyChange(ROOM_PROPERTY, old, room);
     }
 
     public void registerEntity(IEntity entity, IRoom position) {
