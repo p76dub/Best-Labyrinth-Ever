@@ -33,6 +33,7 @@ public class Agent extends Thread implements IAgent {
 
     @Override
     public final void run() {
+        setRunning(true);
         this.initialization();
 
         while (isRunning()) {
