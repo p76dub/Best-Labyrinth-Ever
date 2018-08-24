@@ -109,7 +109,7 @@ public class PointsPlayerView extends JPanel {
     }
 
     private void createController() {
-        getPlayer().addPropertyChangeListener("CHANGE_LIFE",
+        getPlayer().addPropertyChangeListener(IPlayer.LIFE_PROPERTY,
             new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
@@ -130,7 +130,7 @@ public class PointsPlayerView extends JPanel {
         );
 
 
-        getPlayer().addPropertyChangeListener("CHANGE_ATTACK",
+        getPlayer().addPropertyChangeListener(IPlayer.ATTACK_PROPERTY,
             new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
@@ -150,7 +150,7 @@ public class PointsPlayerView extends JPanel {
             }
         );
 
-        getPlayer().addPropertyChangeListener("CHANGE_DEFENSIVE",
+        getPlayer().addPropertyChangeListener(IPlayer.DEFENSE_PROPERTY,
             new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {

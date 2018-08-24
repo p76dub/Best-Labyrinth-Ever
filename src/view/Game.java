@@ -30,13 +30,6 @@ public class Game {
     final int MAX_INITIAL_LIVE_POINTS = 10;
     final int MIN_INITIAL_LIVE_POINTS = 5;
 
-    final int MAX_ITEM_ATTACK_POINTS = 5;
-    final int MIN_ITEM_ATTACK_POINTS = -5;
-    final int MAX_ITEM_DEFENSIVE_POINTS = 5;
-    final int MIN_ITEM_DEFENSIVE_POINTS = -5;
-    final int MAX_ITEM_LIVE_POINTS = 5;
-    final int MIN_ITEM_LIVE_POINTS = -5;
-
     // ATTRIBUTS
     private JFrame mainFrame;
     private PointsPlayerView pointsPlayer;
@@ -139,20 +132,18 @@ public class Game {
                 }
             }
         });
-        //TODO A modifier
-        /*
-        getMaze().getRooms()[xItem][yItem].addPropertyChangeListener("TAKE",
+
+        getPlayer().addPropertyChangeListener(IPlayer.TAKE_PROPERTY,
             new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
                     JOptionPane.showMessageDialog(mainFrame,
-                            ((IItem) evt.getOldValue()).getMessage(),
+                            ((IItem) evt.getNewValue()).getMessage(),
                             "Objet trouvé",
                             JOptionPane.PLAIN_MESSAGE);
                 }
             }
         );
-        */
     }
 
     private void bottom() {
@@ -201,13 +192,16 @@ public class Game {
         Collection<IItem> items = new ArrayList<>();
         Random random = new Random();
         for(int i = 1; i <= number; i++) {
-            int attackPoints = random.nextInt(MAX_ITEM_ATTACK_POINTS - MIN_ITEM_ATTACK_POINTS
-                    + 1) + MIN_ITEM_ATTACK_POINTS;
-            int defensivePoints = random.nextInt(MAX_ITEM_DEFENSIVE_POINTS
-                    - MIN_ITEM_DEFENSIVE_POINTS + 1) + MIN_ITEM_DEFENSIVE_POINTS;
-            int livePoints =  random.nextInt(MAX_ITEM_LIVE_POINTS - MIN_ITEM_LIVE_POINTS
-                    + 1) + MIN_ITEM_LIVE_POINTS;
-            items.add(new Item("bonbon", Paths.get("images/bonbon.png"),
+            int attackPoints = random.nextInt(IItem.MAX_ITEM_ATTACK_POINTS - IItem.MIN_ITEM_ATTACK_POINTS
+                    + 1) + IItem.MIN_ITEM_ATTACK_POINTS;
+            int defensivePoints = random.nextInt(IItem.MAX_ITEM_DEFENSIVE_POINTS
+                    - IItem.MIN_ITEM_DEFENSIVE_POINTS + 1) + IItem.MIN_ITEM_DEFENSIVE_POINTS;
+            int livePoints =  random.nextInt(IItem.MAX_ITEM_LIVE_POINTS - IItem.MIN_ITEM_LIVE_POINTS
+                    + 1) + IItem.MIN_ITEM_LIVE_POINTS;
+            String message = "Points de vie : " + livePoints + "\n"
+                            + "Points d'attaque : " + attackPoints + "\n"
+                            + "Points de défense : " + defensivePoints + "\n";
+            items.add(new Item(message, Paths.get("images/bonbon.png"),
                     attackPoints, defensivePoints, livePoints));
         }
         return items;

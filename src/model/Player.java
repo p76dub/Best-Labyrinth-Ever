@@ -9,16 +9,10 @@ import util.Direction;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.net.URI;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Player implements IPlayer {
-    // STATICS
-    public static final String POSITION = "position";
-    public static final String DEFENSE = "defense";
-    public static final String ATTACK = "attack";
-    public static final String LIFE = "life";
 
     // ATTRIBUTS
     private int attackPoints;
@@ -117,9 +111,9 @@ public class Player implements IPlayer {
         this.lifePoints = Math.max(0, this.lifePoints + item.getLifePoints());
         item.take();
 
-        propertySupport.firePropertyChange(DEFENSE, oldDefensivePoints, getDefensivePoints());
-        propertySupport.firePropertyChange(ATTACK, oldAttackPoints, getAttackPoints());
-        propertySupport.firePropertyChange(LIFE, oldLifePoints, getLifePoints());
+        propertySupport.firePropertyChange(DEFENSE_PROPERTY, oldDefensivePoints, getDefensivePoints());
+        propertySupport.firePropertyChange(ATTACK_PROPERTY, oldAttackPoints, getAttackPoints());
+        propertySupport.firePropertyChange(LIFE_PROPERTY, oldLifePoints, getLifePoints());
     }
 
     @Override
@@ -140,7 +134,11 @@ public class Player implements IPlayer {
         IRoom newRoom = old.getRoomIn(direction);
         setOrientation(direction);
         EntityPositionKeeper.getInstance().move(this, newRoom);
-        propertySupport.firePropertyChange(POSITION, old, newRoom);
+        if (newRoom.getItem() != null && !newRoom.getItem().isTaken()) {
+            this.take(newRoom.getItem());
+            propertySupport.firePropertyChange(TAKE_PROPERTY, null, newRoom.getItem());
+        }
+        propertySupport.firePropertyChange(POSITION_PROPERTY, old, newRoom);
     }
 
     @Override

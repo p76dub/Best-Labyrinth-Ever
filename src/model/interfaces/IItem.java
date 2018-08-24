@@ -4,6 +4,14 @@ import java.nio.file.Path;
 
 public interface IItem {
 
+    //Constantes
+    int MAX_ITEM_ATTACK_POINTS = 5;
+    int MIN_ITEM_ATTACK_POINTS = -5;
+    int MAX_ITEM_DEFENSIVE_POINTS = 5;
+    int MIN_ITEM_DEFENSIVE_POINTS = -5;
+    int MAX_ITEM_LIVE_POINTS = 5;
+    int MIN_ITEM_LIVE_POINTS = -5;
+
     // Requêtes
     /**
      * Retourne le nom de l'image de l'item

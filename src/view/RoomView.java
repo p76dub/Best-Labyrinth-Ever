@@ -62,15 +62,13 @@ public class RoomView extends JPanel {
         image = new JPanel();
         image.setOpaque(false);
         if (model.getEntities().size() != 0) {
-            // FIXME: temporaire, le joueur n'a pour le moment pas d'ennemis
             List<IEntity> entities = new ArrayList<>(model.getEntities());
             ImageIcon icon = new ImageIcon(entities.get(0).getMazeImagePath().getPath());
             Image img = icon.getImage();
             img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
             JLabel imageIcon = new JLabel(new ImageIcon(img));
             image.add(imageIcon);
-        }
-        if (model.getItem() != null) {
+        } else if (model.getItem() != null) {
             ImageIcon icon = new ImageIcon("images/bonbon.png");
             Image img = icon.getImage();
             img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
@@ -87,18 +85,36 @@ public class RoomView extends JPanel {
     }
 
     private void createController() {
-        RoomView view = this;
         EntityPositionKeeper.getInstance().addPropertyChangeListener(EntityPositionKeeper.ROOM_PROPERTY,
             new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getOldValue().equals(model)) {
+                        image.removeAll();
                         if (EntityPositionKeeper.getInstance().getEntities(model).size() == 0) {
-                            image.removeAll();
+                            //Rajoute le bonbon si a pas été déja pris
+                            if (model.getItem() != null && !model.getItem().isTaken()) {
+                                ImageIcon icon = new ImageIcon("images/bonbon.png");
+                                Image img = icon.getImage();
+                                img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                                JLabel imageIcon = new JLabel(new ImageIcon(img));
+                                image.add(imageIcon);
+                                image.revalidate();
+                            }
+                        } else {
+                            Collection<IEntity> entities = EntityPositionKeeper.getInstance().getEntities(model);
+                            List<IEntity> listEntities = new ArrayList<>(entities);
+                            IEntity entity = listEntities.get(0);
+                            ImageIcon icon = new ImageIcon(entity.getMazeImagePath().getPath());
+                            Image img = icon.getImage();
+                            img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                            JLabel imageIcon = new JLabel(new ImageIcon(img));
+                            image.add(imageIcon);
+                            image.revalidate();
                         }
                     }
                     if (evt.getNewValue().equals(model)) {
-                        view.add(image);
+                        image.removeAll();
                         image.setBackground(DEFAULT_BACKGROUND);
                         Collection<IEntity> entities = EntityPositionKeeper.getInstance().getEntities(model);
                         List<IEntity> listEntities = new ArrayList<>(entities);
