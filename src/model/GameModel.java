@@ -2,108 +2,98 @@ package model;
 
 import model.interfaces.*;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 public class GameModel {
 
-    //CONSTANTES
-    public final int MAX_INITIAL_ATTACK_POINTS = 20;
-    public final int MAX_INITIAL_DEFENSIVE_POINTS = 20;
-    public final int MAX_INITIAL_LIVE_POINTS = 20;
-    public final int MIN_INITIAL_LIVE_POINTS = 5;
-
-    public final int MAX_ITEM_ATTACK_POINTS = 5;
-    public final int MAX_ITEM_DEFENSIVE_POINTS = 5;
-    public final int MAX_ITEM_LIVE_POINTS = 10;
-
-    //ATTRIBUTS
+    // ATTRIBUTS
     private IMaze maze;
     private IPlayer player;
     private List<IEnemy> enemies;
     private List<IItem> items;
-    private IPrincess princess;
 
-    //CONSTRUCTEUR
-    public GameModel() {
-        enemies = new ArrayList<IEnemy>();
-        items = new ArrayList<IItem>();
+    // CONSTRUCTEUR
+    public GameModel(IMaze maze, IPlayer player, Collection<IEnemy> enemies, Collection<IItem> items) {
+        if (maze == null || player == null || enemies == null || items == null) {
+            throw new NullPointerException();
+        }
+        if (maze.colsNb() * maze.rowsNb() < 4) {  // Au moins 3 pièces : entrée, sortie et princesse
+            throw new IllegalArgumentException();
+        }
+        if (enemies.size() > maze.colsNb() * maze.rowsNb() - 2) { // Pas d'ennemis sur l'entrée ou la sortie
+            throw new IllegalArgumentException();
+        }
+        if (items.size() > maze.colsNb() * maze.rowsNb() - 3) { // Pas d'items sur l'entrée, la sortie et la princesse
+            throw new IllegalArgumentException();
+        }
+        this.maze = maze;
+        this.player = player;
+
+        this.enemies = new ArrayList<>(enemies);
+        setEnemies(this.enemies);
+
+        this.items = new ArrayList<>(items);
+        setItems(this.items);
     }
 
-    //REQUÊTES
+    // REQUÊTES
     public IPlayer getPlayer() { return player; }
 
-    public List<IEnemy> getEnemies() { return enemies; }
+    public List<IEnemy> getEnemies() { return new ArrayList<>(enemies); }
 
-    public List<IItem> getItems() { return items; }
+    public List<IItem> getItems() { return new ArrayList<>(items); }
 
-    public IPrincess getPrincess() { return princess; }
+    public IPrincess getPrincess() { return maze.getPrincess(); }
 
     public IMaze getMaze() { return maze; }
 
-    //COMMANDES
-    public void setPlayer(IPlayer player) {
-        if (player == null) {
-            throw new NullPointerException();
+    // OUTILS
+    private void setItem(IItem item) {
+        assert  item != null;
+        IRoom[][] rooms = this.maze.getRooms();
+        boolean positioned = false;
+        Random r = new Random();
+
+        while (!positioned) {
+            IRoom room = rooms[r.nextInt(rooms.length)][r.nextInt(rooms[0].length)];
+            if (room.getItem() == null && !maze.entry().equals(room) && !maze.exit().equals(room)
+                    && !getPrincess().getRoom().equals(room)) {
+                room.setItem(item);
+                positioned = true;
+            }
         }
-        this.player = player;
     }
 
-    public void setPlayer(String name) {
-        if (name == null) {
-            throw new NullPointerException();
+    private void setItems(List<IItem> items) {
+        assert items != null;
+        for (IItem i : items) {
+            this.setItem(i);
         }
-        int attackPoints = (int) (Math.random() * (MAX_INITIAL_ATTACK_POINTS + 1));
-        int defensivePoints = (int) (Math.random() * (MAX_INITIAL_DEFENSIVE_POINTS + 1));
-        int livePoints = (int) (Math.random() * (MAX_INITIAL_LIVE_POINTS - MIN_INITIAL_LIVE_POINTS + 1) + MIN_INITIAL_LIVE_POINTS);
-        this.player = new Player(name, attackPoints, defensivePoints, livePoints);
     }
 
-    public void setMaze(IMaze maze) {
-        if (maze == null) {
-            throw new NullPointerException();
+    private void setEnemy(IEnemy enemy) {
+        assert enemy != null;
+        IRoom[][] rooms = this.maze.getRooms();
+        boolean positioned = false;
+        Random r = new Random();
+
+        while (!positioned) {
+            IRoom room = rooms[r.nextInt(rooms.length)][r.nextInt(rooms[0].length)];
+            if (!maze.entry().equals(room) && !maze.exit().equals(room)) {
+                EntityPositionKeeper.getInstance().registerEntity(enemy, room);
+                positioned = true;
+            }
         }
-        this.maze = maze;
     }
 
-    public void setMaze(int width, int height) {
-        this.maze = new Maze(width, height);
-    }
-
-    public void setMaze() {
-        this.maze = new Maze();
-    }
-
-    public void setItems(List<IItem> items) {
-        if (items == null) {
-            throw new NullPointerException();
+    private void setEnemies(List<IEnemy> enemies) {
+        assert enemies != null;
+        for (IEnemy e : enemies) {
+            this.setEnemy(e);
         }
-        this.items = items;
     }
 
-    public void addItem(IItem item) {
-        if (item == null) {
-            throw new NullPointerException();
-        }
-        items.add(item);
-    }
-
-    public void addItem(String message, Path pathname) {
-        if (message == null || pathname == null) {
-            throw new NullPointerException();
-        }
-        int attackPoints = (int) (Math.random() * (MAX_ITEM_ATTACK_POINTS + 1));
-        int defensivePoints = (int) (Math.random() * (MAX_ITEM_DEFENSIVE_POINTS + 1));
-        int livePoints = (int) (Math.random() * (MAX_ITEM_LIVE_POINTS + 1));
-        IItem item = new Item(message, pathname,  attackPoints, defensivePoints, livePoints, null);
-        items.add(item);
-    }
-
-    public void removeItem(IItem item) {
-        if (item == null) {
-            throw new NullPointerException();
-        }
-        items.remove(item);
-    }
 }

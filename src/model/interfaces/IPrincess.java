@@ -1,6 +1,6 @@
 package model.interfaces;
 
-import java.nio.file.Path;
+import java.net.URI;
 
 public interface IPrincess {
 
@@ -9,7 +9,7 @@ public interface IPrincess {
      * Retourne le chemin de l'image de la princesse.
      * @return nameImage
      */
-    Path getImagePath();
+    URI getImagePath();
 
     /**
      * Retourne si la princesse a été retrouvée

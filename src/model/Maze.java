@@ -1,22 +1,23 @@
 package model;
 
 import model.interfaces.IMaze;
-import model.interfaces.IMazeGenerator;
+import model.interfaces.IPrincess;
 import model.interfaces.IRoom;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import java.net.URISyntaxException;
 import java.util.Random;
 
 public class Maze implements IMaze {
     // STATICS
     private static final int DEFAULT_WIDTH = 15;
     private static final int DEFAULT_HEIGHT = 15;
+    private static final String PRINCESS_MESSAGE = "Merci messiiiirre";
 
     // ATTRIBUTS
     private final IRoom[][] rooms;
     private final IRoom entry;
     private final IRoom exit;
+    private final IPrincess princess;
 
     // CONSTRUCTOR
     /**
@@ -31,8 +32,9 @@ public class Maze implements IMaze {
      *     rowsNb() == height
      *     colsNb() == width
      * </pre>
+     * @throws URISyntaxException if the princess picture uri is malformed
      */
-    public Maze(int width, int height) {
+    public Maze(int width, int height) throws URISyntaxException {
         if (width <= 0 || height <= 0) {
             throw new IllegalArgumentException();
         }
@@ -44,7 +46,22 @@ public class Maze implements IMaze {
             }
         }
         entry = pickRandomRoom();
-        exit = pickRandomRoom();
+
+        IRoom exit = pickRandomRoom();
+        while (exit.equals(entry)) {
+            exit = pickRandomRoom();
+        }
+        this.exit = exit;
+
+        IRoom princessRoom = pickRandomRoom();
+        while (princessRoom.equals(exit) || princessRoom.equals(entry)) {
+            princessRoom = pickRandomRoom();
+        }
+        princess = new Princess(
+            PRINCESS_MESSAGE,
+                this.getClass().getResource("../../../images/zombie.png").toURI(),
+                princessRoom
+        );
     }
 
     /**
@@ -53,14 +70,14 @@ public class Maze implements IMaze {
      * @pre size > 0
      * @post colsNb() == rowsNb() == size
      */
-    public Maze(int size) {
+    public Maze(int size) throws URISyntaxException {
         this(size, size);
     }
 
     /**
      * Créer un labyrinthe avec une hauteur et une largeur par défaut.
      */
-    public Maze() {
+    public Maze() throws URISyntaxException {
         this(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
@@ -87,6 +104,11 @@ public class Maze implements IMaze {
     @Override
     public IRoom[][] getRooms() {
         return rooms;
+    }
+
+    @Override
+    public IPrincess getPrincess() {
+        return princess;
     }
 
     @Override

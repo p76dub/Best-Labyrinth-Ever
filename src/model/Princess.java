@@ -3,12 +3,12 @@ package model;
 import model.interfaces.IPrincess;
 import model.interfaces.IRoom;
 
-import java.nio.file.Path;
+import java.net.URI;
 
 public class Princess implements IPrincess {
 
     // ATTRIBUTS
-    private final Path imagePath;
+    private final URI imagePath;
     private final String message;
     private IRoom location;
     private boolean safe;
@@ -29,7 +29,7 @@ public class Princess implements IPrincess {
      *     !safe
      * </pre>
      */
-    public Princess(String message, Path image, IRoom room) {
+    public Princess(String message, URI image, IRoom room) {
         if (message == null || image == null || room == null) {
             throw new AssertionError();
         }
@@ -41,7 +41,7 @@ public class Princess implements IPrincess {
 
     // REQUETES
     @Override
-    public Path getImagePath() {
+    public URI getImagePath() {
         return imagePath;
     }
 

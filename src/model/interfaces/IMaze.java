@@ -49,6 +49,12 @@ public interface IMaze {
     IRoom[][] getRooms();
 
     /**
+     * Retourne la princesse du labyrinthe.
+     * @return la princesse
+     */
+    IPrincess getPrincess();
+
+    /**
      * Marque la pièce r comme visitée (utilisé lors de l'affichage du
      *  labyrinthe).
      */
