@@ -13,7 +13,6 @@ public class Item implements IItem {
     private final int lifePoints;
     private boolean taken;
     private final String message;
-    private final IRoom location;
 
     // CONSTRUCTEUR
     /**
@@ -24,11 +23,9 @@ public class Item implements IItem {
      * @param attack points d'attaque
      * @param defense points de défense
      * @param life points de ve
-     * @param room pièce dans laquelle est déployé l'item
      * @pre <pre>
      *     message != null
      *     image != null
-     *     room != null
      * </pre>
      * @post <pre>
      *     getMessage().equals(message)
@@ -36,11 +33,10 @@ public class Item implements IItem {
      *     getAttackPoints() == attack
      *     getDefensivePoints() == defense
      *     getLifePoints() == life
-     *     getRoom().equals(room)
      * </pre>
      */
-    public Item(String message, Path image, int attack, int defense, int life, IRoom room) {
-        if (message == null || image == null || room == null) {
+    public Item(String message, Path image, int attack, int defense, int life) {
+        if (message == null || image == null) {
             throw new AssertionError();
         }
         this.message = message;
@@ -48,7 +44,6 @@ public class Item implements IItem {
         this.attack = attack;
         this.defense = defense;
         this.lifePoints = life;
-        this.location = room;
     }
 
     @Override
@@ -77,11 +72,6 @@ public class Item implements IItem {
     }
 
     @Override
-    public IRoom getRoom() {
-        return location;
-    }
-
-    @Override
     public String getMessage() {
         return message;
     }
@@ -90,7 +80,5 @@ public class Item implements IItem {
     @Override
     public void take() {
         this.taken = true;
-        //TODO changement
-        getRoom().setItem(null);
     }
 }

@@ -1,7 +1,10 @@
 package view;
 
+import model.EntityPositionKeeper;
 import model.Maze;
 import model.Room;
+import model.interfaces.IEntity;
+import model.interfaces.IPlayer;
 import model.interfaces.IRoom;
 import util.Direction;
 
@@ -9,6 +12,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Collection;
 
 public class RoomView extends JPanel {
     // STATICS
@@ -53,6 +60,7 @@ public class RoomView extends JPanel {
 
     private void createView() {
         image = new JPanel();
+        image.setOpaque(false);
         if (model.getEntities().size() != 0) {
             // FIXME: temporaire, le joueur n'a pour le moment pas d'ennemis
             ImageIcon icon = new ImageIcon("images/player.png");
@@ -68,7 +76,6 @@ public class RoomView extends JPanel {
             JLabel imageIcon = new JLabel(new ImageIcon(img));
             image.add(imageIcon);
         }
-        image.setBackground(DEFAULT_BACKGROUND);
         this.setPreferredSize(new Dimension(SIZE, SIZE));
         refresh();
         this.setBackground(DEFAULT_BACKGROUND);
@@ -79,24 +86,23 @@ public class RoomView extends JPanel {
     }
 
     private void createController() {
-        model.addPropertyChangeListener("PLAYER",
+        RoomView view = this;
+        EntityPositionKeeper.getInstance().addPropertyChangeListener(EntityPositionKeeper.ROOM_PROPERTY,
             new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
-                    image.removeAll();
-                    if (evt.getNewValue() != null) {
-                        String direction = "";
-                        /*
-                        if (model.getDirection() == Direction.NORTH) {
-                            direction = "_top";
+                    if (evt.getOldValue().equals(model)) {
+                        if (EntityPositionKeeper.getInstance().getEntities(model).size() == 0) {
+                            image.removeAll();
                         }
-                        if (model.getDirection() == Direction.WEST) {
-                            direction = "_left";
-                        }
-                        if (model.getDirection() == Direction.SOUTH) {
-                            direction = "_bottom";
-                        }*/
-                        ImageIcon icon = new ImageIcon("images/player"+direction+".png");
+                    }
+                    if (evt.getNewValue().equals(model)) {
+                        view.add(image);
+                        image.setBackground(DEFAULT_BACKGROUND);
+                        Collection<IEntity> entities = EntityPositionKeeper.getInstance().getEntities(model);
+                        List<IEntity> listEntities = new ArrayList<>(entities);
+                        IEntity entity = listEntities.get(0);
+                        ImageIcon icon = new ImageIcon(entity.getMazeImagePath().getPath());
                         Image img = icon.getImage();
                         img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
                         JLabel imageIcon = new JLabel(new ImageIcon(img));
@@ -112,7 +118,11 @@ public class RoomView extends JPanel {
         class Bla {
             JFrame mainFrame = new JFrame();
             public Bla() {
-                mainFrame.add(new RoomView(new Room(new Maze())), BorderLayout.CENTER);
+                try {
+                    mainFrame.add(new RoomView(new Room(new Maze())), BorderLayout.CENTER);
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
                 mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             }
 

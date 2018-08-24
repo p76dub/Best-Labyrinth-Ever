@@ -31,6 +31,7 @@ public class GameModel {
         }
         this.maze = maze;
         this.player = player;
+        EntityPositionKeeper.getInstance().registerEntity(player, maze.entry());
 
         this.enemies = new ArrayList<>(enemies);
         setEnemies(this.enemies);

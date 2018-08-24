@@ -1,10 +1,8 @@
 package view;
 
-import model.EntityPositionKeeper;
+import model.*;
 import model.generators.GeneratorFactory;
-import model.Maze;
-import model.Player;
-import model.Item;
+import model.interfaces.IEnemy;
 import model.interfaces.IItem;
 import model.interfaces.IMaze;
 import model.interfaces.IPlayer;
@@ -17,36 +15,54 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Random;
+import java.util.*;
 
 public class Game {
+
+    //CONSTANTES
+    final int MAX_INITIAL_ATTACK_POINTS = 10;
+    final int MAX_INITIAL_DEFENSIVE_POINTS = 10;
+    final int MAX_INITIAL_LIVE_POINTS = 10;
+    final int MIN_INITIAL_LIVE_POINTS = 5;
+
+    final int MAX_ITEM_ATTACK_POINTS = 5;
+    final int MIN_ITEM_ATTACK_POINTS = -5;
+    final int MAX_ITEM_DEFENSIVE_POINTS = 5;
+    final int MIN_ITEM_DEFENSIVE_POINTS = -5;
+    final int MAX_ITEM_LIVE_POINTS = 5;
+    final int MIN_ITEM_LIVE_POINTS = -5;
 
     // ATTRIBUTS
     private JFrame mainFrame;
     private PointsPlayerView pointsPlayer;
-    private IPlayer player;
     private MazeView mazeView;
-    private IMaze maze;
-    private int xItem;
-    private int yItem;
+    private GameModel model;
 
 
     // CONSTRUCTEUR
     public Game() {
-        createModel();
+        try {
+            createModel();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
         createView();
         placeComponents();
         createController();
     }
 
     // REQUETES
-    public IMaze getMaze() {
-        return maze;
-    }
+    public IMaze getMaze() { return model.getMaze(); }
+
     public IPlayer getPlayer() {
-        return player;
+        return model.getPlayer();
     }
+
+    public GameModel getModel() { return model; }
 
     // COMMANDES
     public void display() {
@@ -56,28 +72,17 @@ public class Game {
     }
 
     // OUTILS
-    private void createModel() {
-        final int MAX_INITIAL_ATTACK_POINTS = 20;
-        final int MAX_INITIAL_DEFENSIVE_POINTS = 20;
-        final int MAX_INITIAL_LIVE_POINTS = 20;
-        final int MIN_INITIAL_LIVE_POINTS = 5;
-
-        maze = new Maze();
+    private void createModel() throws URISyntaxException {
+        IMaze maze = new Maze();
         GeneratorFactory.backTrackingGenerator(maze);
-        Random random = new Random();
-        int attackPoints = random.nextInt(MAX_INITIAL_ATTACK_POINTS) + 1;
-        int defensivePoints = random.nextInt(MAX_INITIAL_DEFENSIVE_POINTS) + 1;
-        int livePoints =  random.nextInt(MAX_INITIAL_LIVE_POINTS - MIN_INITIAL_LIVE_POINTS) + MIN_INITIAL_LIVE_POINTS;
 
-        //TODO à changer
-        player = new Player("test", attackPoints, defensivePoints, livePoints);
-        EntityPositionKeeper.getInstance().registerEntity(player, maze.getRooms()[0][0]);
-        xItem = (int) (Math.random() * (getMaze().colsNb()));
-        yItem = (int) (Math.random() * (getMaze().rowsNb()));
-        IItem it = new Item("Un joli bonbon !\n Tu gagnes 5 points d'attaque, " +
-                "3 points de défense.\n Tu perds 2 points de vie.", Paths.get(""),
-                5, 3, -2, maze.getRooms()[xItem][yItem]);
-        getMaze().getRooms()[xItem][yItem].setItem(it);
+        IPlayer player = generatorPlayer("test");
+
+        Collection< IEnemy > enemies = new ArrayList<>();
+
+        Collection<IItem> items = generatorItems(3);
+
+        model = new GameModel(maze, player, enemies, items);
     }
 
     private void createView() {
@@ -87,11 +92,10 @@ public class Game {
         mainFrame = new JFrame("Labyrinthe");
         mainFrame.setPreferredSize(new Dimension(frameWidth, frameHeight));
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mazeView = new MazeView(maze);
 
+        mazeView = new MazeView(getMaze());
 
         pointsPlayer = new PointsPlayerView(getPlayer());
-        //mazeView.placePlayer(0,0);
     }
 
     private void placeComponents() {
@@ -133,17 +137,19 @@ public class Game {
             }
         });
         //TODO A modifier
+        /*
         getMaze().getRooms()[xItem][yItem].addPropertyChangeListener("TAKE",
             new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
                     JOptionPane.showMessageDialog(mainFrame,
                             ((IItem) evt.getOldValue()).getMessage(),
-                            "Bonus",
+                            "Objet trouvé",
                             JOptionPane.PLAIN_MESSAGE);
                 }
             }
         );
+        */
     }
 
     private void bottom() {
@@ -168,6 +174,36 @@ public class Game {
         if (getPlayer().getRoom().canExitIn(Direction.NORTH)) {
             getPlayer().move(Direction.NORTH);
         }
+    }
+
+    private IPlayer generatorPlayer(String name) {
+        Random random = new Random();
+        int attackPoints = random.nextInt(MAX_INITIAL_ATTACK_POINTS) + 1;
+        int defensivePoints = random.nextInt(MAX_INITIAL_DEFENSIVE_POINTS) + 1;
+        int livePoints =  random.nextInt(MAX_INITIAL_LIVE_POINTS - MIN_INITIAL_LIVE_POINTS) + MIN_INITIAL_LIVE_POINTS;
+
+        Map<Direction, URI> map = new HashMap<>();
+        map.put(Direction.EAST, URI.create("images/player.png"));
+        map.put(Direction.WEST, URI.create("images/player_left.png"));
+        map.put(Direction.NORTH, URI.create("images/player_top.png"));
+        map.put(Direction.SOUTH, URI.create("images/player_bottom.png"));
+        return new Player(name, attackPoints, defensivePoints, livePoints, map);
+    }
+
+    private Collection<IItem> generatorItems(int number) {
+        Collection<IItem> items = new ArrayList<>();
+        Random random = new Random();
+        for(int i = 1; i <= number; i++) {
+            int attackPoints = random.nextInt(MAX_ITEM_ATTACK_POINTS - MIN_ITEM_ATTACK_POINTS
+                    + 1) + MIN_ITEM_ATTACK_POINTS;
+            int defensivePoints = random.nextInt(MAX_ITEM_DEFENSIVE_POINTS
+                    - MIN_ITEM_DEFENSIVE_POINTS + 1) + MIN_ITEM_DEFENSIVE_POINTS;
+            int livePoints =  random.nextInt(MAX_ITEM_LIVE_POINTS - MIN_ITEM_LIVE_POINTS
+                    + 1) + MIN_ITEM_LIVE_POINTS;
+            items.add(new Item("bonbon", Paths.get("images/bonbon.png"),
+                    attackPoints, defensivePoints, livePoints));
+        }
+        return items;
     }
 
     // LANCEUR

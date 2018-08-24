@@ -138,8 +138,8 @@ public class Player implements IPlayer {
         }
         IRoom old = getRoom();
         IRoom newRoom = old.getRoomIn(direction);
-        EntityPositionKeeper.getInstance().move(this, newRoom);
         setOrientation(direction);
+        EntityPositionKeeper.getInstance().move(this, newRoom);
         propertySupport.firePropertyChange(POSITION, old, newRoom);
     }
 

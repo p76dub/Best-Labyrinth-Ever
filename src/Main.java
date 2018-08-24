@@ -6,10 +6,17 @@ import model.interfaces.INetwork;
 import model.interfaces.IRoom;
 import util.Direction;
 
+import java.net.URISyntaxException;
+
 public class Main {
     public static void main(String[] args) {
         //Create a new Maze
-        IMaze maze = new Maze(6, 6);
+        IMaze maze = null;
+        try {
+            maze = new Maze(6, 6);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
         GeneratorFactory.growingTreeGeneration(maze);
 
         INetwork<IRoom, Direction> network = RoomNetwork.getInstance();

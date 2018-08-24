@@ -36,13 +36,6 @@ public interface IItem {
     boolean isTaken();
 
     /**
-     * Retourne la pièce dans laquelle se trouve l'item
-     * @return myRoom
-     * @pre !isTaken()
-     */
-    IRoom getRoom();
-
-    /**
      * Retourne le message d'apparition de l'item.
      * @return message
      */

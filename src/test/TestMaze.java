@@ -6,6 +6,8 @@ import model.interfaces.IMaze;
 import model.interfaces.IRoom;
 import util.Direction;
 
+import java.net.URISyntaxException;
+
 public class TestMaze {
 
     private Maze maze;
@@ -155,7 +157,12 @@ public class TestMaze {
 
     // POINT D'ENTREE
     public static void main(String[] args) {
-        TestMaze game = new TestMaze(new Maze(20,20));
+        TestMaze game = null;
+        try {
+            game = new TestMaze(new Maze(20,20));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
         GeneratorFactory.growingTreeGeneration(game.getMaze());
         System.out.println(game.describe());
     }

@@ -5,11 +5,16 @@ import model.Maze;
 import model.Player;
 import model.interfaces.IMaze;
 import model.interfaces.IPlayer;
+import util.Direction;
 
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class PointsPlayerView extends JPanel {
@@ -183,9 +188,19 @@ public class PointsPlayerView extends JPanel {
                 int defensivePoints = random.nextInt(MAX_INITIAL_DEFENSIVE_POINTS) + 1;
                 int livePoints =  random.nextInt(MAX_INITIAL_LIVE_POINTS - MIN_INITIAL_LIVE_POINTS) + MIN_INITIAL_LIVE_POINTS;
                 //TODO à changer disparaitre room & maze
-                IMaze maze = new Maze();
+                IMaze maze = null;
+                try {
+                    maze = new Maze();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
                 System.out.println(attackPoints +"/"+defensivePoints+"/"+livePoints);
-                player = new Player("test", attackPoints, defensivePoints, livePoints);
+                Map<Direction, URI> map = new HashMap<>();
+                map.put(Direction.EAST, URI.create("images/player.png"));
+                map.put(Direction.WEST, URI.create("images/player_left.png"));
+                map.put(Direction.NORTH, URI.create("images/player_top.png"));
+                map.put(Direction.SOUTH, URI.create("images/player_bottom.png"));
+                player = new Player("test", attackPoints, defensivePoints, livePoints, map);
                 EntityPositionKeeper.getInstance().registerEntity(player, maze.getRooms()[0][0]);
                 mainFrame.add(new PointsPlayerView(player), BorderLayout.CENTER);
                 mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

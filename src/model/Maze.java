@@ -45,6 +45,7 @@ public class Maze implements IMaze {
                 rooms[i][j] = new Room(this);
             }
         }
+
         entry = pickRandomRoom();
 
         IRoom exit = pickRandomRoom();
@@ -57,9 +58,10 @@ public class Maze implements IMaze {
         while (princessRoom.equals(exit) || princessRoom.equals(entry)) {
             princessRoom = pickRandomRoom();
         }
+        //TODO IMAGE
         princess = new Princess(
             PRINCESS_MESSAGE,
-                this.getClass().getResource("../../../images/zombie.png").toURI(),
+                null,
                 princessRoom
         );
     }
@@ -121,6 +123,6 @@ public class Maze implements IMaze {
         Random generator = new Random();
         int x = generator.nextInt(rowsNb());
         int y = generator.nextInt(colsNb());
-        return getRooms()[x][y];
+        return getRooms()[y][x];
     }
 }

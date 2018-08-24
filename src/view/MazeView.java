@@ -8,14 +8,15 @@ import model.interfaces.IRoom;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
+import java.net.URISyntaxException;
 
 public class MazeView extends JPanel {
 
+    // CONSTANTES
+    public static final Color ENTRY = Color.RED;
+    public static final Color EXIT = Color.GREEN;
+
     // ATTRIBUTS
-    public final int BORDER_SIZE = 1;
-
-    private final int SIZE = 600;
-
     private IMaze model;
     private RoomView[][] rooms;
 
@@ -25,12 +26,14 @@ public class MazeView extends JPanel {
         createView();
         placeComponents();
         createController();
+        exitAndEntrySee();
     }
 
     // REQUETES
     public IMaze getModel() {
         return model;
     }
+    public RoomView[][] getRoomView() { return rooms; }
 
     // COMMANDES
     public void setModel(IMaze model) {
@@ -42,12 +45,6 @@ public class MazeView extends JPanel {
             }
         }
     }
-
-    /*
-    public void placePlayer(int x, int y) {
-        rooms[x][y].setImage("player.png");
-    }
-    */
 
     // OUTILS
     private void createModel(IMaze model) {
@@ -81,6 +78,18 @@ public class MazeView extends JPanel {
     private void createController() {
     }
 
+    private void exitAndEntrySee() {
+        for (int i = 0; i < model.colsNb(); ++i) {
+            for (int j = 0; j < model.rowsNb(); ++j) {
+                if (model.getRooms()[i][j].equals(model.exit())) {
+                    getRoomView()[i][j].setBackground(EXIT);
+                }
+                if (model.getRooms()[i][j].equals(model.entry())) {
+                    getRoomView()[i][j].setBackground(ENTRY);
+                }
+            }
+        }
+    }
     // TEST
     public static void main(String[] args) {
         class Bla {
@@ -88,8 +97,12 @@ public class MazeView extends JPanel {
             JFrame mainFrame = new JFrame(filename);
             IMaze model;
             public Bla() {
-                model = new Maze();
-                GeneratorFactory.huntAndKillGeneration(model, 0.9F);
+                try {
+                    model = new Maze();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+                GeneratorFactory.backTrackingGenerator(model);
                 mainFrame.add(new MazeView(model), BorderLayout.CENTER);
                 mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             }
