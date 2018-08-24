@@ -1,6 +1,7 @@
 package view;
 
 import model.*;
+import model.enemies.EnemyFactory;
 import model.generators.GeneratorFactory;
 import model.interfaces.IEnemy;
 import model.interfaces.IItem;
@@ -53,6 +54,7 @@ public class Game {
         createView();
         placeComponents();
         createController();
+        this.model.start();
     }
 
     // REQUETES
@@ -79,6 +81,7 @@ public class Game {
         IPlayer player = generatorPlayer("test");
 
         Collection< IEnemy > enemies = new ArrayList<>();
+        enemies.add(EnemyFactory.createZombie());
 
         Collection<IItem> items = generatorItems(3);
 
@@ -183,10 +186,14 @@ public class Game {
         int livePoints =  random.nextInt(MAX_INITIAL_LIVE_POINTS - MIN_INITIAL_LIVE_POINTS) + MIN_INITIAL_LIVE_POINTS;
 
         Map<Direction, URI> map = new HashMap<>();
-        map.put(Direction.EAST, URI.create("images/player.png"));
-        map.put(Direction.WEST, URI.create("images/player_left.png"));
-        map.put(Direction.NORTH, URI.create("images/player_top.png"));
-        map.put(Direction.SOUTH, URI.create("images/player_bottom.png"));
+        try {
+            map.put(Direction.EAST, getClass().getResource("../player.png").toURI());
+            map.put(Direction.WEST, getClass().getResource("../player_left.png").toURI());
+            map.put(Direction.NORTH, getClass().getResource("../player_top.png").toURI());
+            map.put(Direction.SOUTH, getClass().getResource("../player_bottom.png").toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
         return new Player(name, attackPoints, defensivePoints, livePoints, map);
     }
 

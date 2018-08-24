@@ -6,10 +6,8 @@ import model.interfaces.IEntity;
 import model.interfaces.IRoom;
 import util.Direction;
 import util.agent.Agent;
-import util.agent.IBehaviour;
 
 import java.net.URI;
-import java.util.Collection;
 
 
 class Enemy extends Agent implements IEnemy {
@@ -22,9 +20,9 @@ class Enemy extends Agent implements IEnemy {
     private Direction orientation;
 
     // CONSTRUCTEUR
-    public Enemy(String name, String message, URI imagePath, int attack, int defense, int life, Collection<IBehaviour> behaviours) {
+    public Enemy(String name, String message, URI imagePath, int attack, int defense, int life) {
         super(name);
-        if (name == null || message == null || imagePath == null || behaviours == null) {
+        if (name == null || message == null || imagePath == null) {
             throw new NullPointerException();
         }
         if (0 >= attack || 0 > defense || defense > 100 || life <= 0) {
@@ -36,9 +34,6 @@ class Enemy extends Agent implements IEnemy {
         this.defense = defense;
         this.life = life;
         this.orientation = Direction.EAST;
-        for (IBehaviour b: behaviours) {
-            this.addBehaviour(b);
-        }
     }
 
     @Override
@@ -98,6 +93,7 @@ class Enemy extends Agent implements IEnemy {
         if (!getRoom().canExitIn(direction)) {
             throw new AssertionError();
         }
+        setOrientation(direction);
         EntityPositionKeeper.getInstance().move(this, getRoom().getRoomIn(direction));
     }
 

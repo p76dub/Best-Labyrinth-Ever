@@ -21,6 +21,11 @@ public interface IAgent {
      */
     String getName();
 
+    /**
+     * Indique si l'agent est lancé ou non.
+     */
+    boolean isRunning();
+
     // COMMANDS
     /**
      * Called as the first line of the run method. It should perform some initialization before running the agent body.
@@ -50,4 +55,14 @@ public interface IAgent {
      * @param behaviour the behaviour you want to delete.
      */
     void removeBehaviour(IBehaviour behaviour);
+
+    /**
+     * Démarrer l'agent.
+     */
+    void start();
+
+    /**
+     * Arrêter l'agent.
+     */
+    void stop();
 }

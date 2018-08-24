@@ -51,6 +51,13 @@ public class GameModel {
 
     public IMaze getMaze() { return maze; }
 
+    //COMMANDES
+    public void start() {
+        for (IEnemy enemy : this.enemies) {
+            enemy.start();
+        }
+    }
+
     // OUTILS
     private void setItem(IItem item) {
         assert  item != null;
@@ -96,5 +103,4 @@ public class GameModel {
             this.setEnemy(e);
         }
     }
-
 }

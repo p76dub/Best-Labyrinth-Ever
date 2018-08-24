@@ -63,7 +63,8 @@ public class RoomView extends JPanel {
         image.setOpaque(false);
         if (model.getEntities().size() != 0) {
             // FIXME: temporaire, le joueur n'a pour le moment pas d'ennemis
-            ImageIcon icon = new ImageIcon("images/player.png");
+            List<IEntity> entities = new ArrayList<>(model.getEntities());
+            ImageIcon icon = new ImageIcon(entities.get(0).getMazeImagePath().getPath());
             Image img = icon.getImage();
             img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
             JLabel imageIcon = new JLabel(new ImageIcon(img));
