@@ -11,7 +11,7 @@ public class EnemyFactory {
         return new ZombieEnemy(
             "Zombie",
             "Groohhrrg",
-            EnemyFactory.class.getResource("../../epee.png").toURI(),
+            EnemyFactory.class.getResource("../../enemy3.png").toURI(),
             2,
             0,
             5
