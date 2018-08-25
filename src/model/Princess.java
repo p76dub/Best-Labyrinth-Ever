@@ -30,8 +30,7 @@ public class Princess implements IPrincess {
      * </pre>
      */
     public Princess(String message, URI image, IRoom room) {
-        //TODO image != null
-        if (message == null || room == null) {
+        if (message == null || image == null || room == null) {
             throw new AssertionError();
         }
         this.message = message;

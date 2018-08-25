@@ -61,7 +61,7 @@ public class Maze implements IMaze {
         //TODO IMAGE
         princess = new Princess(
             PRINCESS_MESSAGE,
-                null,
+                getClass().getResource("../coeur.png").toURI(),
                 princessRoom
         );
     }

@@ -62,18 +62,11 @@ public class RoomView extends JPanel {
         image = new JPanel();
         image.setOpaque(false);
         if (model.getEntities().size() != 0) {
-            List<IEntity> entities = new ArrayList<>(model.getEntities());
-            ImageIcon icon = new ImageIcon(entities.get(0).getMazeImagePath().getPath());
-            Image img = icon.getImage();
-            img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-            JLabel imageIcon = new JLabel(new ImageIcon(img));
-            image.add(imageIcon);
+            imageEntity();
         } else if (model.getItem() != null) {
-            ImageIcon icon = new ImageIcon("images/bonbon.png");
-            Image img = icon.getImage();
-            img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-            JLabel imageIcon = new JLabel(new ImageIcon(img));
-            image.add(imageIcon);
+            imageCandy();
+        } else if (model.getMaze().getPrincess().getRoom().equals(model)) {
+            imagePrincess();
         }
         this.setPreferredSize(new Dimension(SIZE, SIZE));
         refresh();
@@ -94,42 +87,54 @@ public class RoomView extends JPanel {
                         if (EntityPositionKeeper.getInstance().getEntities(model).size() == 0) {
                             //Rajoute le bonbon si a pas été déja pris
                             if (model.getItem() != null && !model.getItem().isTaken()) {
-                                ImageIcon icon = new ImageIcon("images/bonbon.png");
-                                Image img = icon.getImage();
-                                img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-                                JLabel imageIcon = new JLabel(new ImageIcon(img));
-                                image.add(imageIcon);
-                                image.revalidate();
+                                imageCandy();
+                            }
+                            if (model.getMaze().getPrincess().getRoom().equals(model) && !model.getMaze().getPrincess().isSafe()) {
+                                imagePrincess();
                             }
                         } else {
-                            Collection<IEntity> entities = EntityPositionKeeper.getInstance().getEntities(model);
-                            List<IEntity> listEntities = new ArrayList<>(entities);
-                            IEntity entity = listEntities.get(0);
-                            ImageIcon icon = new ImageIcon(entity.getMazeImagePath().getPath());
-                            Image img = icon.getImage();
-                            img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-                            JLabel imageIcon = new JLabel(new ImageIcon(img));
-                            image.add(imageIcon);
-                            image.revalidate();
+                            imageEntity();
                         }
                     }
                     if (evt.getNewValue().equals(model)) {
-                        image.removeAll();
-                        image.setBackground(DEFAULT_BACKGROUND);
-                        Collection<IEntity> entities = EntityPositionKeeper.getInstance().getEntities(model);
-                        List<IEntity> listEntities = new ArrayList<>(entities);
-                        IEntity entity = listEntities.get(0);
-                        ImageIcon icon = new ImageIcon(entity.getMazeImagePath().getPath());
-                        Image img = icon.getImage();
-                        img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-                        JLabel imageIcon = new JLabel(new ImageIcon(img));
-                        image.add(imageIcon);
-                        image.revalidate();
+                        imageEntity();
                     }
                 }
             }
         );
     }
+
+    private void imageCandy() {
+        ImageIcon icon = new ImageIcon("images/bonbon.png");
+        Image img = icon.getImage();
+        img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        JLabel imageIcon = new JLabel(new ImageIcon(img));
+        image.add(imageIcon);
+        image.revalidate();
+    }
+
+    private void imagePrincess() {
+        ImageIcon icon = new ImageIcon("images/coeur.png");
+        Image img = icon.getImage();
+        img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        JLabel imageIcon = new JLabel(new ImageIcon(img));
+        image.add(imageIcon);
+        image.revalidate();
+    }
+
+    private void imageEntity() {
+        image.removeAll();
+        Collection<IEntity> entities = EntityPositionKeeper.getInstance().getEntities(model);
+        List<IEntity> listEntities = new ArrayList<>(entities);
+        IEntity entity = listEntities.get(0);
+        ImageIcon icon = new ImageIcon(entity.getMazeImagePath().getPath());
+        Image img = icon.getImage();
+        img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        JLabel imageIcon = new JLabel(new ImageIcon(img));
+        image.add(imageIcon);
+        image.revalidate();
+    }
+
     // TEST
     public static void main(String[] args) {
         class Bla {

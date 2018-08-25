@@ -95,14 +95,14 @@ public class Game {
     }
 
     private void placeComponents() {
-        mainFrame.setLayout(new BorderLayout()); {
+        mainFrame.setLayout(new FlowLayout()); {
 
             //ajout du composant labyrinthe
             mazeView.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
-            mainFrame.add(mazeView, BorderLayout.NORTH);
+            mainFrame.add(mazeView);
 
             //ajout les points du joueur
-            mainFrame.add(pointsPlayer, BorderLayout.SOUTH);
+            mainFrame.add(pointsPlayer);
         }
     }
 
@@ -143,6 +143,23 @@ public class Game {
                             JOptionPane.PLAIN_MESSAGE);
                 }
             }
+        );
+
+        getPlayer().addPropertyChangeListener(IPlayer.POSITION_PROPERTY,
+                new PropertyChangeListener() {
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        if (evt.getNewValue().equals(getMaze().getPrincess().getRoom())
+                        && !getMaze().getPrincess().isSafe()) {
+                            getMaze().getPrincess().save();
+                            JOptionPane.showMessageDialog(mainFrame,
+                                    getMaze().getPrincess().getMessage(),
+                                    "Princesse sauvée",
+                                    JOptionPane.PLAIN_MESSAGE);
+                        }
+
+                    }
+                }
         );
     }
 

@@ -61,6 +61,11 @@ public class Room implements IRoom {
     }
 
     @Override
+    public IMaze getMaze() {
+        return maze;
+    }
+
+    @Override
     public void setItem(IItem it) {
         IItem oldItem = getItem();
         item = it;

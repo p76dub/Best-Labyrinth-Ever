@@ -47,6 +47,12 @@ public interface IRoom {
      */
     IItem getItem();
 
+    /**
+     * Retourne le labyrinthe associé de la pièce.
+     * @return maze
+     */
+    IMaze getMaze();
+
     Collection<IEntity> getEntities();
 
     void addPropertyChangeListener(String property, PropertyChangeListener l);
