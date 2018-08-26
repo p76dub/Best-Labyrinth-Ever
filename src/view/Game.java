@@ -18,7 +18,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -35,6 +34,7 @@ public class Game {
     private PointsPlayerView pointsPlayer;
     private MazeView mazeView;
     private GameModel model;
+    private CaptionView captionView;
 
 
     // CONSTRUCTEUR
@@ -86,24 +86,39 @@ public class Game {
         final int frameHeight = 600;
 
         mainFrame = new JFrame("Labyrinthe");
-        mainFrame.setPreferredSize(new Dimension(frameWidth, frameHeight));
+        //mainFrame.setPreferredSize(new Dimension(frameWidth, frameHeight));
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         mazeView = new MazeView(getMaze());
 
         pointsPlayer = new PointsPlayerView(getPlayer());
+
+        captionView = new CaptionView(model);
     }
 
     private void placeComponents() {
-        mainFrame.setLayout(new FlowLayout()); {
+        JPanel m = new JPanel(new GridBagLayout()); {
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.gridheight = 1;
+            gbc.gridwidth = 1;
 
-            //ajout du composant labyrinthe
-            mazeView.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
-            mainFrame.add(mazeView);
+            JPanel p = new JPanel(new FlowLayout()); {
+                //ajout du composant labyrinthe
+                mazeView.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+                p.add(mazeView);
+
+                //ajout de la légende du labyrinthe
+                p.add(captionView);
+            }
+            m.add(p, gbc);
 
             //ajout les points du joueur
-            mainFrame.add(pointsPlayer);
+            gbc.gridy = 1;
+            m.add(pointsPlayer, gbc);
         }
+        mainFrame.add(m);
     }
 
     private void createController() {
