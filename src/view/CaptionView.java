@@ -7,11 +7,13 @@ import model.enemies.EnemyFactory;
 import model.generators.GeneratorFactory;
 import model.interfaces.IMaze;
 import model.interfaces.IPlayer;
+import model.interfaces.IPrincess;
 import util.Direction;
 
 import javax.swing.*;
 import java.awt.*;
-import java.lang.reflect.Array;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -25,6 +27,8 @@ public class CaptionView extends JPanel {
     private GameModel model;
     private JPanel start;
     private JPanel end;
+    private JPanel candyNb;
+    private JPanel savePrincess;
 
     // CONSTRUCTEUR
     public CaptionView(GameModel model) {
@@ -46,120 +50,158 @@ public class CaptionView extends JPanel {
 
     private void createView() {
         start = new JPanel();
-        start.setBackground(Color.RED);
+        start.setBackground(MazeView.ENTRY);
 
         end = new JPanel();
-        end.setBackground(Color.GREEN);
+        end.setBackground(MazeView.EXIT);
+
+        candyNb = new JPanel();
+        savePrincess = new JPanel();
 
         this.setBorder(BorderFactory.createTitledBorder("Légende"));
     }
 
     private void placeComponents() {
         //alignement des composants verticalement
-        JPanel listPane = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
+        this.setLayout(new GridBagLayout());
+        {
+            GridBagConstraints gbc = new GridBagConstraints();
 
-        //On positionne la case de départ du composant
-        gbc.gridx = 0;
-        gbc.gridy = 0;
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.gridheight = 1;
+            gbc.gridwidth = 1;
 
-        //La taille en hauteur et en largeur
-        gbc.gridheight = 1;
-        gbc.gridwidth = 1;
+            //ajout du départ
+            JPanel s = new JPanel(new FlowLayout());
+            {
+                s.add(start);
+                JLabel caption = new JLabel("Départ du labyrinthe");
+                s.add(caption);
+            }
+            this.add(s, gbc);
 
-        //ajout du départ
-        JPanel s = new JPanel(new FlowLayout()); {
-            s.add(start);
-            JLabel caption = new JLabel("Départ du labyrinthe");
-            s.add(caption);
-        }
-        listPane.add(s, gbc);
+            //ajout de l'arrivée
+            s = new JPanel(new FlowLayout());
+            {
+                s.add(end);
+                JLabel caption = new JLabel("Arrivée du labyrinthe");
+                s.add(caption);
+            }
+            gbc.gridx += 1;
+            this.add(s, gbc);
 
-        //ajout de l'arrivée
-        s = new JPanel(new FlowLayout()); {
-            s.add(end);
-            JLabel caption = new JLabel("Arrivée du labyrinthe");
-            s.add(caption);
-        }
-        gbc.gridx += 1;
-        listPane.add(s, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy += 1;
-        if (!getGame().getPrincess().isSafe()) {
             s = new JPanel(new FlowLayout()); {
-                ImageIcon icon = new ImageIcon("images/coeur.png");
-                Image img = icon.getImage();
-                img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-                JLabel imageLife = new JLabel(new ImageIcon(img));
-                s.add(imageLife);
+                s.add(imagePrincess());
                 JLabel caption = new JLabel("princesse à sauver");
                 s.add(caption);
             }
-            listPane.add(s, gbc);
-        }
+            savePrincess.add(s);
 
-        //ajout de la liste des items
-        for (int i = 0; i < getGame().getItems().size(); i++) {
-            s = new JPanel(new FlowLayout()); {
-                ImageIcon icon = new ImageIcon("images/bonbon.png");
-                Image img = icon.getImage();
-                img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-                JLabel imageLife = new JLabel(new ImageIcon(img));
-                s.add(imageLife);
-                JLabel caption = new JLabel("x"+(i+1));
-                s.add(caption);
+            gbc.gridx = 0;
+            gbc.gridy += 1;
+            this.add(savePrincess, gbc);
+
+            candyCounter();
+            gbc.gridx += 1;
+            this.add(candyNb, gbc);
+
+            //ajout de la liste d'ennemies
+            int colorEnemies[] = new int[7];
+
+            for (int i = 0; i < getGame().getEnemies().size(); i++) {
+                String path = getGame().getEnemies().get(i).getMazeImagePath().getPath();
+                char c = path.charAt(path.length() - (".png".length() + 1));
+                int nbColor = Integer.parseInt(String.valueOf(c));
+                colorEnemies[nbColor - 1] = colorEnemies[nbColor - 1] + 1;
             }
-        }
-        if (getGame().getItems().size() ==0) {
-            s = new JPanel(new FlowLayout()); {
-                ImageIcon icon = new ImageIcon("images/bonbon.png");
-                Image img = icon.getImage();
-                img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-                JLabel imageLife = new JLabel(new ImageIcon(img));
-                s.add(imageLife);
-                JLabel caption = new JLabel("x0");
-                s.add(caption);
-            }
-        }
-        gbc.gridx += 1;
-        listPane.add(s, gbc);
 
-        //ajout de la liste d'ennemies
-        int colorEnemies[] = new int[7];
-
-        for (int i = 0; i < getGame().getEnemies().size(); i++) {
-            String path = getGame().getEnemies().get(i).getMazeImagePath().getPath();
-            char c = path.charAt(path.length() - (".png".length() + 1));
-            int nbColor = Integer.parseInt(String.valueOf(c));
-            colorEnemies[nbColor - 1] = colorEnemies[nbColor - 1] + 1;
-        }
-
-        s = new JPanel(new FlowLayout()); {
-            for (int i = 0; i < colorEnemies.length; i++) {
-                JPanel p = new JPanel(new FlowLayout());
-                {
-                    ImageIcon icon = new ImageIcon("images/enemy" + (i+1) + ".png");
-                    Image img = icon.getImage();
-                    img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-                    JLabel imageLife = new JLabel(new ImageIcon(img));
-                    p.add(imageLife);
-                    JLabel caption = new JLabel("x" + (colorEnemies[i]));
-                    p.add(caption);
+            s = new JPanel(new FlowLayout());
+            {
+                for (int i = 0; i < colorEnemies.length; i++) {
+                    JPanel p = new JPanel(new FlowLayout());
+                    {
+                        p.add(imageEnemy(i + 1));
+                        JLabel caption = new JLabel("x" + (colorEnemies[i]));
+                        p.add(caption);
+                    }
+                    s.add(p);
                 }
-                s.add(p);
             }
+            gbc.gridx = 0;
+            gbc.gridy += 1;
+            gbc.gridwidth = 2;
+            this.add(s, gbc);
         }
-        gbc.gridx = 0;
-        gbc.gridy += 1;
-        gbc.gridwidth = 2;
-        listPane.add(s, gbc);
-
-        this.add(listPane);
     }
 
     private void createController() {
+        this.getGame().getPlayer().addPropertyChangeListener(IPlayer.TAKE_PROPERTY,
+            new PropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    candyCounter();
+                }
+            }
+        );
 
+        this.getGame().getMaze().getPrincess().addPropertyChangeListener(IPrincess.SAFE_PROPERTY,
+                new PropertyChangeListener() {
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        savePrincess.removeAll();
+                        JPanel s = new JPanel(new FlowLayout()); {
+                            s.add(imagePrincess());
+                            JLabel caption = new JLabel("princesse sauvée");
+                            s.add(caption);
+                        }
+                        savePrincess.add(s);
+                        savePrincess.revalidate();
+                    }
+                }
+        );
+
+
+
+    }
+
+    //ajout de la liste des items
+    private void candyCounter() {
+        int count = 0;
+        candyNb.removeAll();
+
+        for (int i = 0; i < getGame().getItems().size(); i++) {
+            count += getGame().getItems().get(i).isTaken() ? 0 : 1;
+        }
+
+        JPanel s = new JPanel(new FlowLayout()); {
+            s.add(imageCandy());
+            JLabel caption = new JLabel("x"+count);
+            s.add(caption);
+        }
+        candyNb.add(s);
+
+        candyNb.revalidate();
+    }
+    private JLabel imageCandy() {
+        ImageIcon icon = new ImageIcon("images/bonbon.png");
+        Image img = icon.getImage();
+        img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        return new JLabel(new ImageIcon(img));
+    }
+
+    private JLabel imageEnemy(int i) {
+        ImageIcon icon = new ImageIcon("images/enemy" + i + ".png");
+        Image img = icon.getImage();
+        img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        return new JLabel(new ImageIcon(img));
+    }
+
+    private JLabel imagePrincess() {
+        ImageIcon icon = new ImageIcon("images/coeur.png");
+        Image img = icon.getImage();
+        img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        return new JLabel(new ImageIcon(img));
     }
 
     // TEST

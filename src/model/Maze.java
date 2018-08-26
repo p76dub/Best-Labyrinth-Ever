@@ -11,7 +11,7 @@ public class Maze implements IMaze {
     // STATICS
     private static final int DEFAULT_WIDTH = 15;
     private static final int DEFAULT_HEIGHT = 15;
-    private static final String PRINCESS_MESSAGE = "Merci messiiiirre";
+    private static final String PRINCESS_MESSAGE = "Merci de m'avoir sauvé merciiire";
 
     // ATTRIBUTS
     private final IRoom[][] rooms;

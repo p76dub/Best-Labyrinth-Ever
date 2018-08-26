@@ -3,6 +3,8 @@ package model;
 import model.interfaces.IPrincess;
 import model.interfaces.IRoom;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.net.URI;
 
 public class Princess implements IPrincess {
@@ -11,6 +13,7 @@ public class Princess implements IPrincess {
     private final URI imagePath;
     private final String message;
     private IRoom location;
+    private PropertyChangeSupport propertySupport;
     private boolean safe;
 
     // CONSTRUCTEUR
@@ -37,6 +40,7 @@ public class Princess implements IPrincess {
         this.imagePath = image;
         this.location = room;
         this.safe = false;
+        propertySupport = new PropertyChangeSupport(this);
     }
 
     // REQUETES
@@ -60,5 +64,25 @@ public class Princess implements IPrincess {
     @Override
     public void save() {
         safe = true;
+        propertySupport.firePropertyChange(SAFE_PROPERTY, false, true);
+    }
+
+
+    public void addPropertyChangeListener(String property, PropertyChangeListener l) {
+        if (l == null) {
+            throw new AssertionError("l'écouteur est null");
+        }
+        if (propertySupport == null) {
+            propertySupport = new PropertyChangeSupport(this);
+        }
+        propertySupport.addPropertyChangeListener(property, l);
+    }
+
+    @Override
+    public void removePropertyChangeListener(PropertyChangeListener l) {
+        if (propertySupport == null) {
+            propertySupport = new PropertyChangeSupport(this);
+        }
+        propertySupport.removePropertyChangeListener(l);
     }
 }

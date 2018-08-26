@@ -1,8 +1,12 @@
 package model.interfaces;
 
+import java.beans.PropertyChangeListener;
 import java.net.URI;
 
 public interface IPrincess {
+
+    // STATICS
+    String SAFE_PROPERTY = "save";
 
     // Requêtes
     /**
@@ -34,4 +38,8 @@ public interface IPrincess {
      * Trouve la princesse et la sauve
      */
     void save();
+
+    void addPropertyChangeListener(String property, PropertyChangeListener l);
+    void removePropertyChangeListener(PropertyChangeListener l);
+
 }
