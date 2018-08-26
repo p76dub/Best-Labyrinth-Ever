@@ -1,5 +1,6 @@
 package view;
 
+import model.EntityPositionKeeper;
 import model.GameModel;
 import model.Maze;
 import model.Player;
@@ -29,9 +30,7 @@ public class CaptionView extends JPanel {
     private JPanel end;
     private JPanel candyNb;
     private JPanel savePrincess;
-    private JPanel panelLife;
-    private JPanel panelAttack;
-    private JPanel panelDefensive;
+    private JPanel enemiesNb;
 
     // CONSTRUCTEUR
     public CaptionView(GameModel model) {
@@ -60,9 +59,7 @@ public class CaptionView extends JPanel {
 
         candyNb = new JPanel();
         savePrincess = new JPanel();
-        panelLife = new JPanel();
-        panelAttack= new JPanel();
-        panelDefensive = new JPanel();
+        enemiesNb = new JPanel();
 
         this.setBorder(BorderFactory.createTitledBorder("Légende"));
     }
@@ -112,90 +109,22 @@ public class CaptionView extends JPanel {
             gbc.gridx += 1;
             this.add(candyNb, gbc);
 
-            //ajout de la liste d'ennemies
-            int colorEnemies[] = new int[7];
-
-            for (int i = 0; i < getGame().getEnemies().size(); i++) {
-                String path = getGame().getEnemies().get(i).getMazeImagePath().getPath();
-                char c = path.charAt(path.length() - (".png".length() + 1));
-                int nbColor = Integer.parseInt(String.valueOf(c));
-                colorEnemies[nbColor - 1] = colorEnemies[nbColor - 1] + 1;
-            }
-
-            s = new JPanel(new FlowLayout());
-            {
-                for (int i = 0; i < colorEnemies.length; i++) {
-                    JPanel p = new JPanel(new FlowLayout());
-                    {
-                        p.add(imageEnemy(i + 1));
-                        JLabel caption = new JLabel("x" + (colorEnemies[i]));
-                        p.add(caption);
-                    }
-                    s.add(p);
-                }
-            }
+            enemiesCounter();
             gbc.gridx = 0;
             gbc.gridy += 1;
             gbc.gridwidth = 2;
-            this.add(s, gbc);
-
-            s = new JPanel(new FlowLayout()); {
-                JLabel life = new JLabel("Mes points :");
-                s.add(life);
-
-                //ajout des points de vie
-                JPanel p = new JPanel(new FlowLayout()); {
-                    ImageIcon icon = new ImageIcon("images/coeur.png");
-                    Image img = icon.getImage();
-                    img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-                    JLabel imageLife = new JLabel(new ImageIcon(img));
-                    p.add(imageLife);
-                    JLabel caption = new JLabel("x" + getGame().getPlayer().getLifePoints());
-                    p.add(caption);
-                }
-                panelLife.add(p);
-                s.add(panelLife);
-
-                //ajout des points d'attaque
-                p = new JPanel(new FlowLayout()); {
-                    ImageIcon icon = new ImageIcon("images/epee.png");
-                    Image img = icon.getImage();
-                    img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-                    JLabel imageLife = new JLabel(new ImageIcon(img));
-                    p.add(imageLife);
-                    JLabel caption = new JLabel("x" + getGame().getPlayer().getAttackPoints());
-                    p.add(caption);
-                }
-                panelAttack.add(p);
-                s.add(panelAttack);
-
-                //ajout des points de défense
-                p = new JPanel(new FlowLayout()); {
-                    ImageIcon icon = new ImageIcon("images/bouclier.png");
-                    Image img = icon.getImage();
-                    img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-                    JLabel imageLife = new JLabel(new ImageIcon(img));
-                    p.add(imageLife);
-                    JLabel caption = new JLabel("x" + getGame().getPlayer().getDefensivePoints());
-                    p.add(caption);
-                }
-                panelDefensive.add(p);
-                s.add(panelDefensive);
-            }
-            gbc.gridx = 0;
-            gbc.gridy += 1;
-            this.add(s, gbc);
+            this.add(enemiesNb, gbc);
         }
     }
 
     private void createController() {
         this.getGame().getPlayer().addPropertyChangeListener(IPlayer.TAKE_PROPERTY,
-            new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    candyCounter();
+                new PropertyChangeListener() {
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        candyCounter();
+                    }
                 }
-            }
         );
 
         this.getGame().getMaze().getPrincess().addPropertyChangeListener(IPrincess.SAFE_PROPERTY,
@@ -203,7 +132,8 @@ public class CaptionView extends JPanel {
                     @Override
                     public void propertyChange(PropertyChangeEvent evt) {
                         savePrincess.removeAll();
-                        JPanel s = new JPanel(new FlowLayout()); {
+                        JPanel s = new JPanel(new FlowLayout());
+                        {
                             s.add(imagePrincess());
                             JLabel caption = new JLabel("princesse sauvée");
                             s.add(caption);
@@ -214,66 +144,43 @@ public class CaptionView extends JPanel {
                 }
         );
 
-        getGame().getPlayer().addPropertyChangeListener(IPlayer.LIFE_PROPERTY,
-                new PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        panelLife.removeAll();
-                        JPanel p = new JPanel(new FlowLayout()); {
-                            ImageIcon icon = new ImageIcon("images/coeur.png");
-                            Image img = icon.getImage();
-                            img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-                            JLabel imageLife = new JLabel(new ImageIcon(img));
-                            p.add(imageLife);
-                            JLabel caption = new JLabel("x" + (int) evt.getNewValue());
-                            p.add(caption);
-                        }
-                        panelLife.add(p);
-                        panelLife.revalidate();
-                    }
+        EntityPositionKeeper.getInstance().addPropertyChangeListener(
+            EntityPositionKeeper.REMOVE_ENTITY_PROPERTY,
+            new PropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    enemiesCounter();
                 }
+            }
         );
+    }
 
+    //ajout de la liste d'ennemies
+    private void enemiesCounter() {
+        enemiesNb.removeAll();
 
-        getGame().getPlayer().addPropertyChangeListener(IPlayer.ATTACK_PROPERTY,
-                new PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        panelAttack.removeAll();
-                        JPanel p = new JPanel(new FlowLayout()); {
-                            ImageIcon icon = new ImageIcon("images/epee.png");
-                            Image img = icon.getImage();
-                            img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-                            JLabel imageLife = new JLabel(new ImageIcon(img));
-                            p.add(imageLife);
-                            JLabel caption = new JLabel("x" + (int) evt.getNewValue());
-                            p.add(caption);
-                        }
-                        panelAttack.add(p);
-                        panelAttack.revalidate();
-                    }
+        int colorEnemies[] = new int[7];
+
+        for (int i = 0; i < getGame().getEnemies().size(); i++) {
+            String path = getGame().getEnemies().get(i).getMazeImagePath().getPath();
+            char c = path.charAt(path.length() - (".png".length() + 1));
+            int nbColor = Integer.parseInt(String.valueOf(c));
+            colorEnemies[nbColor - 1] = colorEnemies[nbColor - 1] + 1;
+        }
+
+        JPanel s = new JPanel(new FlowLayout()); {
+            for (int i = 0; i < colorEnemies.length; i++) {
+                JPanel p = new JPanel(new FlowLayout());
+                {
+                    p.add(imageEnemy(i + 1));
+                    JLabel caption = new JLabel("x" + (colorEnemies[i]));
+                    p.add(caption);
                 }
-        );
-
-        getGame().getPlayer().addPropertyChangeListener(IPlayer.DEFENSE_PROPERTY,
-                new PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        panelDefensive.removeAll();
-                        JPanel p = new JPanel(new FlowLayout()); {
-                            ImageIcon icon = new ImageIcon("images/bouclier.png");
-                            Image img = icon.getImage();
-                            img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-                            JLabel imageLife = new JLabel(new ImageIcon(img));
-                            p.add(imageLife);
-                            JLabel caption = new JLabel("x" + (int) evt.getNewValue());
-                            p.add(caption);
-                        }
-                        panelDefensive.add(p);
-                        panelDefensive.revalidate();
-                    }
-                }
-        );
+                s.add(p);
+            }
+        }
+        enemiesNb.add(s);
+        enemiesNb.revalidate();
     }
 
     //ajout de la liste des items
@@ -294,6 +201,7 @@ public class CaptionView extends JPanel {
 
         candyNb.revalidate();
     }
+
     private JLabel imageCandy() {
         ImageIcon icon = new ImageIcon("images/bonbon.png");
         Image img = icon.getImage();
@@ -335,8 +243,6 @@ public class CaptionView extends JPanel {
 
                 Collection enemies = new ArrayList();
                 enemies.add(EnemyFactory.createZombie());
-                enemies.add(EnemyFactory.createZombie2());
-                enemies.add(EnemyFactory.createZombie3());
 
                 GameModel model = new GameModel(maze, player, enemies, new ArrayList<>());
 

@@ -11,6 +11,7 @@ public class EntityPositionKeeper {
     // STATICS
     private static EntityPositionKeeper instance;
     public static final String ROOM_PROPERTY = "room";
+    public static final String REMOVE_ENTITY_PROPERTY = "remove entity";
 
     public static EntityPositionKeeper getInstance() {
         if (instance == null) {
@@ -101,6 +102,7 @@ public class EntityPositionKeeper {
         IRoom room = positions.remove(entity);
         reversed.get(room).remove(entity);
         propertySupport.firePropertyChange(ROOM_PROPERTY, null, room);
+        propertySupport.firePropertyChange(REMOVE_ENTITY_PROPERTY, null, entity);
     }
 
     public void addPropertyChangeListener(String property, PropertyChangeListener l) {

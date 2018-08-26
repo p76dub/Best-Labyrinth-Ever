@@ -93,9 +93,11 @@ public class Game {
     }
 
     private void placeComponents() {
-        mainFrame.setLayout(new GridBagLayout()); {
-            GridBagConstraints gbc = new GridBagConstraints();
+        JPanel m = new JPanel(new GridBagLayout()); {
+            m.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.insets = new Insets(5,5,5,5);
             gbc.gridx = 0;
             gbc.gridy = 0;
             gbc.gridheight = 2;
@@ -103,13 +105,16 @@ public class Game {
 
             //ajout du composant labyrinthe
             mazeView.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
-            mainFrame.add(mazeView, gbc);
+            m.add(mazeView, gbc);
 
             gbc.gridheight = 1;
             gbc.gridx = 1;
-            mainFrame.add(captionView, gbc);
+            m.add(captionView, gbc);
 
+            gbc.gridy = 1;
+            m.add(pointsPlayer, gbc);
         }
+        mainFrame.add(m);
     }
 
     private void createController() {
