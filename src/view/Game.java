@@ -82,11 +82,7 @@ public class Game {
     }
 
     private void createView() {
-        final int frameWidth = 600;
-        final int frameHeight = 600;
-
         mainFrame = new JFrame("Labyrinthe");
-        //mainFrame.setPreferredSize(new Dimension(frameWidth, frameHeight));
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         mazeView = new MazeView(getMaze());
@@ -97,28 +93,23 @@ public class Game {
     }
 
     private void placeComponents() {
-        JPanel m = new JPanel(new GridBagLayout()); {
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            gbc.gridheight = 1;
-            gbc.gridwidth = 1;
+        mainFrame.setLayout(new FlowLayout()); {
 
-            JPanel p = new JPanel(new FlowLayout()); {
-                //ajout du composant labyrinthe
-                mazeView.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
-                p.add(mazeView);
+            //ajout du composant labyrinthe
+            mazeView.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+            mainFrame.add(mazeView);
+
+            JPanel p = new JPanel(new BorderLayout()); {
 
                 //ajout de la légende du labyrinthe
-                p.add(captionView);
-            }
-            m.add(p, gbc);
+                p.add(captionView, BorderLayout.NORTH);
 
-            //ajout les points du joueur
-            gbc.gridy = 1;
-            m.add(pointsPlayer, gbc);
+                //ajout les points du joueur
+                p.add(pointsPlayer, BorderLayout.SOUTH);
+            }
+            mainFrame.add(p);
+
         }
-        mainFrame.add(m);
     }
 
     private void createController() {

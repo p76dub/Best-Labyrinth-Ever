@@ -50,6 +50,8 @@ public class CaptionView extends JPanel {
 
         end = new JPanel();
         end.setBackground(Color.GREEN);
+
+        this.setBorder(BorderFactory.createTitledBorder("Légende"));
     }
 
     private void placeComponents() {

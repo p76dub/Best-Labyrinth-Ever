@@ -47,6 +47,8 @@ public class PointsPlayerView extends JPanel {
         panelLife = new JPanel();
         panelAttack= new JPanel();
         panelDefensive = new JPanel();
+        this.setBorder(BorderFactory.createTitledBorder("Mes points"));
+
     }
 
     private void placeComponents() {
