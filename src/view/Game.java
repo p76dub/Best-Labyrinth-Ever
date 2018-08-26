@@ -68,7 +68,7 @@ public class Game {
 
     // OUTILS
     private void createModel() throws URISyntaxException {
-        IMaze maze = new Maze();
+        IMaze maze = new Maze(10, 10);
         GeneratorFactory.backTrackingGenerator(maze);
 
         IPlayer player = generatorPlayer("test");
@@ -93,21 +93,21 @@ public class Game {
     }
 
     private void placeComponents() {
-        mainFrame.setLayout(new FlowLayout()); {
+        mainFrame.setLayout(new GridBagLayout()); {
+            GridBagConstraints gbc = new GridBagConstraints();
+
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.gridheight = 2;
+            gbc.gridwidth = 1;
 
             //ajout du composant labyrinthe
             mazeView.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
-            mainFrame.add(mazeView);
+            mainFrame.add(mazeView, gbc);
 
-            JPanel p = new JPanel(new BorderLayout()); {
-
-                //ajout de la légende du labyrinthe
-                p.add(captionView, BorderLayout.NORTH);
-
-                //ajout les points du joueur
-                p.add(pointsPlayer, BorderLayout.SOUTH);
-            }
-            mainFrame.add(p);
+            gbc.gridheight = 1;
+            gbc.gridx = 1;
+            mainFrame.add(captionView, gbc);
 
         }
     }

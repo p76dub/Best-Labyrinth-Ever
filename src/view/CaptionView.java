@@ -29,6 +29,9 @@ public class CaptionView extends JPanel {
     private JPanel end;
     private JPanel candyNb;
     private JPanel savePrincess;
+    private JPanel panelLife;
+    private JPanel panelAttack;
+    private JPanel panelDefensive;
 
     // CONSTRUCTEUR
     public CaptionView(GameModel model) {
@@ -57,6 +60,9 @@ public class CaptionView extends JPanel {
 
         candyNb = new JPanel();
         savePrincess = new JPanel();
+        panelLife = new JPanel();
+        panelAttack= new JPanel();
+        panelDefensive = new JPanel();
 
         this.setBorder(BorderFactory.createTitledBorder("Légende"));
     }
@@ -132,6 +138,53 @@ public class CaptionView extends JPanel {
             gbc.gridy += 1;
             gbc.gridwidth = 2;
             this.add(s, gbc);
+
+            s = new JPanel(new FlowLayout()); {
+                JLabel life = new JLabel("Mes points :");
+                s.add(life);
+
+                //ajout des points de vie
+                JPanel p = new JPanel(new FlowLayout()); {
+                    ImageIcon icon = new ImageIcon("images/coeur.png");
+                    Image img = icon.getImage();
+                    img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                    JLabel imageLife = new JLabel(new ImageIcon(img));
+                    p.add(imageLife);
+                    JLabel caption = new JLabel("x" + getGame().getPlayer().getLifePoints());
+                    p.add(caption);
+                }
+                panelLife.add(p);
+                s.add(panelLife);
+
+                //ajout des points d'attaque
+                p = new JPanel(new FlowLayout()); {
+                    ImageIcon icon = new ImageIcon("images/epee.png");
+                    Image img = icon.getImage();
+                    img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                    JLabel imageLife = new JLabel(new ImageIcon(img));
+                    p.add(imageLife);
+                    JLabel caption = new JLabel("x" + getGame().getPlayer().getAttackPoints());
+                    p.add(caption);
+                }
+                panelAttack.add(p);
+                s.add(panelAttack);
+
+                //ajout des points de défense
+                p = new JPanel(new FlowLayout()); {
+                    ImageIcon icon = new ImageIcon("images/bouclier.png");
+                    Image img = icon.getImage();
+                    img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                    JLabel imageLife = new JLabel(new ImageIcon(img));
+                    p.add(imageLife);
+                    JLabel caption = new JLabel("x" + getGame().getPlayer().getDefensivePoints());
+                    p.add(caption);
+                }
+                panelDefensive.add(p);
+                s.add(panelDefensive);
+            }
+            gbc.gridx = 0;
+            gbc.gridy += 1;
+            this.add(s, gbc);
         }
     }
 
@@ -161,8 +214,66 @@ public class CaptionView extends JPanel {
                 }
         );
 
+        getGame().getPlayer().addPropertyChangeListener(IPlayer.LIFE_PROPERTY,
+                new PropertyChangeListener() {
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        panelLife.removeAll();
+                        JPanel p = new JPanel(new FlowLayout()); {
+                            ImageIcon icon = new ImageIcon("images/coeur.png");
+                            Image img = icon.getImage();
+                            img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                            JLabel imageLife = new JLabel(new ImageIcon(img));
+                            p.add(imageLife);
+                            JLabel caption = new JLabel("x" + (int) evt.getNewValue());
+                            p.add(caption);
+                        }
+                        panelLife.add(p);
+                        panelLife.revalidate();
+                    }
+                }
+        );
 
 
+        getGame().getPlayer().addPropertyChangeListener(IPlayer.ATTACK_PROPERTY,
+                new PropertyChangeListener() {
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        panelAttack.removeAll();
+                        JPanel p = new JPanel(new FlowLayout()); {
+                            ImageIcon icon = new ImageIcon("images/epee.png");
+                            Image img = icon.getImage();
+                            img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                            JLabel imageLife = new JLabel(new ImageIcon(img));
+                            p.add(imageLife);
+                            JLabel caption = new JLabel("x" + (int) evt.getNewValue());
+                            p.add(caption);
+                        }
+                        panelAttack.add(p);
+                        panelAttack.revalidate();
+                    }
+                }
+        );
+
+        getGame().getPlayer().addPropertyChangeListener(IPlayer.DEFENSE_PROPERTY,
+                new PropertyChangeListener() {
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        panelDefensive.removeAll();
+                        JPanel p = new JPanel(new FlowLayout()); {
+                            ImageIcon icon = new ImageIcon("images/bouclier.png");
+                            Image img = icon.getImage();
+                            img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                            JLabel imageLife = new JLabel(new ImageIcon(img));
+                            p.add(imageLife);
+                            JLabel caption = new JLabel("x" + (int) evt.getNewValue());
+                            p.add(caption);
+                        }
+                        panelDefensive.add(p);
+                        panelDefensive.revalidate();
+                    }
+                }
+        );
     }
 
     //ajout de la liste des items

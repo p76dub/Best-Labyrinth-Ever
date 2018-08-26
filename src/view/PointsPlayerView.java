@@ -58,17 +58,18 @@ public class PointsPlayerView extends JPanel {
 
         //ajout des points de vie
         JPanel s = new JPanel(); {
-            JLabel life = new JLabel("Points vie : ");
+            JLabel life = new JLabel("Points vie :");
             s.add(life);
-            panelLife = new JPanel(new GridLayout(1, getPlayer().getLifePoints())); {
-                for (int i = 0; i < getPlayer().getLifePoints(); i++) {
-                    ImageIcon icon = new ImageIcon("images/coeur.png");
-                    Image img = icon.getImage();
-                    img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-                    JLabel imageLife = new JLabel(new ImageIcon(img));
-                    panelLife.add(imageLife);
-                }
+            JPanel p = new JPanel(new FlowLayout()); {
+                ImageIcon icon = new ImageIcon("images/coeur.png");
+                Image img = icon.getImage();
+                img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                JLabel imageLife = new JLabel(new ImageIcon(img));
+                p.add(imageLife);
+                JLabel caption = new JLabel("x" + getPlayer().getLifePoints());
+                p.add(caption);
             }
+            panelLife.add(p);
             s.add(panelLife);
         }
         listPane.add(s);
@@ -77,15 +78,16 @@ public class PointsPlayerView extends JPanel {
         s = new JPanel(); {
             JLabel attack = new JLabel("Points d'attaque : ");
             s.add(attack);
-            panelAttack = new JPanel(new GridLayout(1, getPlayer().getAttackPoints())); {
-                for (int i = 0; i < getPlayer().getAttackPoints(); i++) {
-                    ImageIcon icon = new ImageIcon("images/epee.png");
-                    Image img = icon.getImage();
-                    img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-                    JLabel imageAttack = new JLabel(new ImageIcon(img));
-                    panelAttack.add(imageAttack);
-                }
+            JPanel p = new JPanel(new FlowLayout()); {
+                ImageIcon icon = new ImageIcon("images/epee.png");
+                Image img = icon.getImage();
+                img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                JLabel imageLife = new JLabel(new ImageIcon(img));
+                p.add(imageLife);
+                JLabel caption = new JLabel("x" + getPlayer().getAttackPoints());
+                p.add(caption);
             }
+            panelAttack.add(p);
             s.add(panelAttack);
         }
         listPane.add(s);
@@ -94,15 +96,16 @@ public class PointsPlayerView extends JPanel {
         s = new JPanel(); {
             JLabel defensive = new JLabel("Points de défense : ");
             s.add(defensive);
-            panelDefensive = new JPanel(new GridLayout(1, getPlayer().getDefensivePoints())); {
-                for (int i = 0; i < getPlayer().getDefensivePoints(); i++) {
-                    ImageIcon icon = new ImageIcon("images/bouclier.png");
-                    Image img = icon.getImage();
-                    img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-                    JLabel imageDefensive = new JLabel(new ImageIcon(img));
-                    panelDefensive.add(imageDefensive);
-                }
+            JPanel p = new JPanel(new FlowLayout()); {
+                ImageIcon icon = new ImageIcon("images/bouclier.png");
+                Image img = icon.getImage();
+                img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                JLabel imageLife = new JLabel(new ImageIcon(img));
+                p.add(imageLife);
+                JLabel caption = new JLabel("x" + getPlayer().getDefensivePoints());
+                p.add(caption);
             }
+            panelDefensive.add(p);
             s.add(panelDefensive);
         }
         listPane.add(s);
@@ -116,16 +119,16 @@ public class PointsPlayerView extends JPanel {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
                     panelLife.removeAll();
-                    JPanel p = new JPanel(new GridLayout(1, (int) evt.getNewValue())); {
-                        for (int i = 0; i < (int) evt.getNewValue(); i++) {
-                            ImageIcon icon = new ImageIcon("images/coeur.png");
-                            Image img = icon.getImage();
-                            img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-                            JLabel imageLife = new JLabel(new ImageIcon(img));
-                            p.add(imageLife);
-                        }
-                        panelLife.add(p);
+                    JPanel p = new JPanel(new FlowLayout()); {
+                        ImageIcon icon = new ImageIcon("images/coeur.png");
+                        Image img = icon.getImage();
+                        img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                        JLabel imageLife = new JLabel(new ImageIcon(img));
+                        p.add(imageLife);
+                        JLabel caption = new JLabel("x" + (int) evt.getNewValue());
+                        p.add(caption);
                     }
+                    panelLife.add(p);
                     panelLife.revalidate();
                 }
             }
@@ -137,16 +140,16 @@ public class PointsPlayerView extends JPanel {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
                     panelAttack.removeAll();
-                    JPanel p = new JPanel(new GridLayout(1, (int) evt.getNewValue())); {
-                        for (int i = 0; i < (int) evt.getNewValue(); i++) {
-                            ImageIcon icon = new ImageIcon("images/epee.png");
-                            Image img = icon.getImage();
-                            img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-                            JLabel imageAttack = new JLabel(new ImageIcon(img));
-                            p.add(imageAttack);
-                        }
-                        panelAttack.add(p);
+                    JPanel p = new JPanel(new FlowLayout()); {
+                        ImageIcon icon = new ImageIcon("images/epee.png");
+                        Image img = icon.getImage();
+                        img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                        JLabel imageLife = new JLabel(new ImageIcon(img));
+                        p.add(imageLife);
+                        JLabel caption = new JLabel("x" + (int) evt.getNewValue());
+                        p.add(caption);
                     }
+                    panelAttack.add(p);
                     panelAttack.revalidate();
                 }
             }
@@ -157,16 +160,16 @@ public class PointsPlayerView extends JPanel {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
                     panelDefensive.removeAll();
-                    JPanel p = new JPanel(new GridLayout(1, (int) evt.getNewValue())); {
-                        for (int i = 0; i < (int) evt.getNewValue(); i++) {
-                            ImageIcon icon = new ImageIcon("images/bouclier.png");
-                            Image img = icon.getImage();
-                            img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-                            JLabel imageDefensive = new JLabel(new ImageIcon(img));
-                            p.add(imageDefensive);
-                        }
-                        panelDefensive.add(p);
+                    JPanel p = new JPanel(new FlowLayout()); {
+                        ImageIcon icon = new ImageIcon("images/bouclier.png");
+                        Image img = icon.getImage();
+                        img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                        JLabel imageLife = new JLabel(new ImageIcon(img));
+                        p.add(imageLife);
+                        JLabel caption = new JLabel("x" + (int) evt.getNewValue());
+                        p.add(caption);
                     }
+                    panelDefensive.add(p);
                     panelDefensive.revalidate();
                 }
             }
