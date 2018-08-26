@@ -22,7 +22,7 @@ class Enemy extends Agent implements IEnemy {
     // CONSTRUCTEUR
     public Enemy(String name, String message, URI imagePath, int attack, int defense, int life) {
         super(name);
-        if (name == null || message == null || imagePath == null) {
+        if (message == null || imagePath == null) {
             throw new NullPointerException();
         }
         if (0 >= attack || 0 > defense || defense > 100 || life <= 0) {
@@ -82,7 +82,7 @@ class Enemy extends Agent implements IEnemy {
             throw new AssertionError();
         }
         int damages = (1 - enemy.getDefensivePoints() / 100) * getAttackPoints();
-        enemy.setLifePoints(enemy.getLifePoints() - damages);
+        enemy.setLifePoints(Math.max(0, enemy.getLifePoints() - damages));
     }
 
     @Override

@@ -13,34 +13,14 @@ import java.util.List;
 import java.util.Random;
 
 public class RandomMoveBehaviour extends AbstractBehaviour {
-    // ATTRIBUTS
-    private final int sleepTime;
-
-    // CONSTRUCTEUR
-    public RandomMoveBehaviour(IEnemy agent, int sleepTime) {
+    public RandomMoveBehaviour(IAgent agent) {
         super(agent);
-        if (sleepTime < 0) {
-            throw new IllegalArgumentException();
-        }
-        this.sleepTime = sleepTime;
-    }
-    @Override
-    public boolean done() {
-        return false;
     }
 
     @Override
     public void work() {
-        // On commence par dormir un peu
-        try {
-            Thread.sleep(sleepTime);
-        } catch (InterruptedException e) {
-            // Réveil innatendu, on ignore
-        }
-
-        // On fait le travail
         IAgent agent = getAgent();
-        IRoom room =EntityPositionKeeper.getInstance().getPosition((IEntity) agent);
+        IRoom room = EntityPositionKeeper.getInstance().getPosition((IEntity) agent);
         List<Direction> possibleDirection = new ArrayList<>();
 
         // Choisir une pièce accessible
@@ -57,6 +37,6 @@ public class RandomMoveBehaviour extends AbstractBehaviour {
         ((IEntity) agent).move(selectedDirection);
 
         // Terminer le behaviour
-        setDone(true);
+        setDone();
     }
 }

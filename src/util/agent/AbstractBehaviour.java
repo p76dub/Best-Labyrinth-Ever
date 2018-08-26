@@ -30,10 +30,11 @@ public abstract class AbstractBehaviour implements IBehaviour {
         while (!done()) {
             work();
         }
+        this.done = false;
     }
 
     // PROTECTED
-    protected void setDone(boolean value) {
-        this.done = value;
+    protected void setDone() {
+        this.done = true;
     }
 }

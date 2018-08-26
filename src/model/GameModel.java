@@ -2,6 +2,8 @@ package model;
 
 import model.interfaces.*;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -31,13 +33,43 @@ public class GameModel {
         }
         this.maze = maze;
         this.player = player;
-        EntityPositionKeeper.getInstance().registerEntity(player, maze.entry());
+
+        EntityPositionKeeper keeper = EntityPositionKeeper.getInstance();
+        keeper.registerEntity(player, maze.entry());
 
         this.enemies = new ArrayList<>(enemies);
         setEnemies(this.enemies);
 
         this.items = new ArrayList<>(items);
         setItems(this.items);
+
+        keeper.addPropertyChangeListener(EntityPositionKeeper.ROOM_PROPERTY, new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+
+                IRoom room = (IRoom) evt.getNewValue();
+                Collection<IEntity> entities = keeper.getEntities(room);
+                if (!entities.contains(player) || entities.size() <= 1) {
+                    return;
+                }
+
+                freezeEnemies();
+
+                for (IEntity entity : entities) {
+                    if (!entity.equals(player) && !player.isDead()) {
+                        while (!player.isDead() && !entity.isDead()) {
+                            player.attack(entity);
+                            if (!entity.isDead()) {
+                                entity.attack(player);
+                            }
+                        }
+                    }
+                }
+
+                stopAndRemoveDeadEnemies();
+                resumeEnemies();
+            }
+        });
     }
 
     // REQUÊTES
@@ -102,5 +134,29 @@ public class GameModel {
         for (IEnemy e : enemies) {
             this.setEnemy(e);
         }
+    }
+
+    private void freezeEnemies() {
+        for (IEnemy enemy : enemies) {
+            enemy.pause();
+        }
+    }
+
+    private void resumeEnemies() {
+        for (IEnemy enemy : enemies) {
+            enemy.resume();
+        }
+    }
+
+    private void stopAndRemoveDeadEnemies() {
+        List<IEnemy> deleted = new ArrayList<>();
+        for (IEnemy enemy : enemies) {
+            if (enemy.isDead()) {
+                enemy.stop();
+                deleted.add(enemy);
+                EntityPositionKeeper.getInstance().deleteEntity(enemy);
+            }
+        }
+        this.enemies.removeAll(deleted);
     }
 }

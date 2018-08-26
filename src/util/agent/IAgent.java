@@ -22,20 +22,24 @@ public interface IAgent {
     String getName();
 
     /**
-     * Indique si l'agent est lancé ou non.
+     * Indique si l'agent est en cours d'exécution ou non.
      */
     boolean isRunning();
+
+    /**
+     * Indique si l'agent a été lancé.
+     */
+    boolean isStarted();
+
+    boolean isPaused();
+
+    boolean isStopped();
 
     // COMMANDS
     /**
      * Called as the first line of the run method. It should perform some initialization before running the agent body.
      */
     void initialization();
-
-    /**
-     * The agent body.
-     */
-    void run();
 
     /**
      * Perform some cleaning actions just before the agent stops.
@@ -62,7 +66,17 @@ public interface IAgent {
     void start();
 
     /**
-     * Arrêter l'agent.
+     * Arrêter définitivement l'agent.
      */
     void stop();
+
+    /**
+     * Mettre en pause l'agent.
+     */
+    void pause();
+
+    /**
+     * Reprendre l'exécution de l'agent.
+     */
+    void resume();
 }

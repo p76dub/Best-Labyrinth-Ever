@@ -11,6 +11,6 @@ public class ZombieEnemy extends Enemy {
 
     @Override
     public void initialization() {
-        addBehaviour(new RandomMoveBehaviour(this, 500));
+        addBehaviour(new RandomMoveBehaviour(this));
     }
 }

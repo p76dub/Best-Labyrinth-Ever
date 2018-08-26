@@ -82,23 +82,28 @@ public class RoomView extends JPanel {
             new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
-                    if (evt.getOldValue().equals(model)) {
-                        image.removeAll();
-                        if (EntityPositionKeeper.getInstance().getEntities(model).size() == 0) {
-                            //Rajoute le bonbon si a pas été déja pris
-                            if (model.getItem() != null && !model.getItem().isTaken()) {
-                                imageCandy();
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (evt.getOldValue() != null && evt.getOldValue().equals(model)) {
+                                image.removeAll();
+                                if (EntityPositionKeeper.getInstance().getEntities(model).size() == 0) {
+                                    //Rajoute le bonbon si a pas été déja pris
+                                    if (model.getItem() != null && !model.getItem().isTaken()) {
+                                        imageCandy();
+                                    }
+                                    if (model.getMaze().getPrincess().getRoom().equals(model) && !model.getMaze().getPrincess().isSafe()) {
+                                        imagePrincess();
+                                    }
+                                } else {
+                                    imageEntity();
+                                }
                             }
-                            if (model.getMaze().getPrincess().getRoom().equals(model) && !model.getMaze().getPrincess().isSafe()) {
-                                imagePrincess();
+                            if (evt.getNewValue().equals(model)) {
+                                imageEntity();
                             }
-                        } else {
-                            imageEntity();
                         }
-                    }
-                    if (evt.getNewValue().equals(model)) {
-                        imageEntity();
-                    }
+                    });
                 }
             }
         );
@@ -125,13 +130,15 @@ public class RoomView extends JPanel {
     private void imageEntity() {
         image.removeAll();
         Collection<IEntity> entities = EntityPositionKeeper.getInstance().getEntities(model);
-        List<IEntity> listEntities = new ArrayList<>(entities);
-        IEntity entity = listEntities.get(0);
-        ImageIcon icon = new ImageIcon(entity.getMazeImagePath().getPath());
-        Image img = icon.getImage();
-        img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-        JLabel imageIcon = new JLabel(new ImageIcon(img));
-        image.add(imageIcon);
+        if (entities.size() > 0) {
+            List<IEntity> listEntities = new ArrayList<>(entities);
+            IEntity entity = listEntities.get(0);
+            ImageIcon icon = new ImageIcon(entity.getMazeImagePath().getPath());
+            Image img = icon.getImage();
+            img = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+            JLabel imageIcon = new JLabel(new ImageIcon(img));
+            image.add(imageIcon);
+        }
         image.revalidate();
     }
 

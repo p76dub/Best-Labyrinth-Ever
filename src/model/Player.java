@@ -122,7 +122,7 @@ public class Player implements IPlayer {
             throw new AssertionError();
         }
         int damages = (1 - enemy.getDefensivePoints() / 100) * getAttackPoints();
-        enemy.setLifePoints(enemy.getLifePoints() - damages);
+        enemy.setLifePoints(Math.max(0, enemy.getLifePoints() - damages));
     }
 
     @Override
