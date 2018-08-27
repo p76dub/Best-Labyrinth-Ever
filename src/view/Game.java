@@ -3,10 +3,7 @@ package view;
 import model.*;
 import model.enemies.EnemyFactory;
 import model.generators.GeneratorFactory;
-import model.interfaces.IEnemy;
-import model.interfaces.IItem;
-import model.interfaces.IMaze;
-import model.interfaces.IPlayer;
+import model.interfaces.*;
 import util.Direction;
 
 import javax.swing.*;
@@ -35,6 +32,7 @@ public class Game {
     private MazeView mazeView;
     private GameModel model;
     private CaptionView captionView;
+    private boolean resume;
 
 
     // CONSTRUCTEUR
@@ -48,6 +46,7 @@ public class Game {
         placeComponents();
         createController();
         this.model.start();
+        this.model.freezeEnemies();
     }
 
     // REQUETES
@@ -141,6 +140,11 @@ public class Game {
                 if (code == KeyEvent.VK_UP) {
                     top();
                 }
+
+                if (!resume) {
+                    model.resumeEnemies();
+                    resume = true;
+                }
             }
         });
 
@@ -151,17 +155,41 @@ public class Game {
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
+                            getModel().freezeEnemies();
                             JOptionPane.showMessageDialog(
                                     mainFrame,
                                     ((IItem) evt.getNewValue()).getMessage(),
                                     "Objet trouvé",
                                     JOptionPane.PLAIN_MESSAGE
                             );
+                            getModel().resumeEnemies();
                         }
                     });
                 }
             }
         );
+
+        getPlayer().addPropertyChangeListener(IPlayer.POSITION_PROPERTY,
+                new PropertyChangeListener() {
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!getPlayer().isDead() && evt.getNewValue().equals(getMaze().exit()) &&
+                                        getMaze().getPrincess().isSafe()) {
+                                    getModel().stopEnemies();
+                                    JOptionPane.showMessageDialog(
+                                            mainFrame,
+                                            "Félicitations " + getPlayer().getName() + ", tu as gagné !",
+                                            "Victoire",
+                                            JOptionPane.PLAIN_MESSAGE
+                                    );
+                                }
+                            }
+                        });
+                    }
+                });
 
         getPlayer().addPropertyChangeListener(IPlayer.POSITION_PROPERTY,
                 new PropertyChangeListener() {
@@ -173,12 +201,14 @@ public class Game {
                             SwingUtilities.invokeLater(new Runnable() {
                                 @Override
                                 public void run() {
+                                    getModel().freezeEnemies();
                                     JOptionPane.showMessageDialog(
                                             mainFrame,
                                             getMaze().getPrincess().getMessage(),
                                             "Princesse sauvée",
                                             JOptionPane.PLAIN_MESSAGE
                                     );
+                                    getModel().resumeEnemies();
                                 }
                             });
                         }
@@ -186,28 +216,73 @@ public class Game {
                     }
                 }
         );
+
+
+        getPlayer().addPropertyChangeListener(IPlayer.DEAD_PROPERTY,
+                new PropertyChangeListener() {
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        SwingUtilities.invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    for (int i = 0; i< getModel().getEnemies().size(); i++) {
+                                        getModel().getEnemies().get(i).stop();
+                                    }
+                                    JOptionPane.showMessageDialog(
+                                            mainFrame,
+                                            "Vous êtes mort !",
+                                            "Game Over",
+                                            JOptionPane.PLAIN_MESSAGE
+                                    );
+                                }
+                            });
+                        }
+
+                    }
+        );
+
+        getModel().addPropertyChangeListener(IPlayer.KILL_PROPERTY,
+                new PropertyChangeListener() {
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                getModel().stopEnemies();
+                                JOptionPane.showMessageDialog(
+                                        mainFrame,
+                                        "Vous avez été tué par "+ ((IEntity) evt.getNewValue()).getName(),
+                                        "Game Over",
+                                        JOptionPane.PLAIN_MESSAGE
+                                );
+                            }
+                        });
+                    }
+
+                }
+        );
     }
 
     private void bottom() {
-        if (getPlayer().getRoom().canExitIn(Direction.SOUTH)) {
+        if (!getPlayer().isDead() && getPlayer().getRoom().canExitIn(Direction.SOUTH)) {
             getPlayer().move(Direction.SOUTH);
         }
     }
 
     private void left() {
-        if (getPlayer().getRoom().canExitIn(Direction.WEST)) {
+        if (!getPlayer().isDead() && getPlayer().getRoom().canExitIn(Direction.WEST)) {
             getPlayer().move(Direction.WEST);
         }
     }
 
     private void right() {
-        if (getPlayer().getRoom().canExitIn(Direction.EAST)) {
+        if (!getPlayer().isDead() && getPlayer().getRoom().canExitIn(Direction.EAST)) {
             getPlayer().move(Direction.EAST);
         }
     }
 
     private void top() {
-        if (getPlayer().getRoom().canExitIn(Direction.NORTH)) {
+        if (!getPlayer().isDead() && getPlayer().getRoom().canExitIn(Direction.NORTH)) {
             getPlayer().move(Direction.NORTH);
         }
     }

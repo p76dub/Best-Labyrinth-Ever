@@ -4,6 +4,7 @@ import model.interfaces.*;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,6 +17,7 @@ public class GameModel {
     private IPlayer player;
     private List<IEnemy> enemies;
     private List<IItem> items;
+    private PropertyChangeSupport propertySupport;
 
     // CONSTRUCTEUR
     public GameModel(IMaze maze, IPlayer player, Collection<IEnemy> enemies, Collection<IItem> items) {
@@ -55,6 +57,9 @@ public class GameModel {
                     for (IEntity entity : entities) {
                         if (!entity.equals(GameModel.this.player)) {
                             executeCombat(GameModel.this.player, entity);
+                            if (GameModel.this.player.isDead()) {
+                                 propertySupport.firePropertyChange(IPlayer.KILL_PROPERTY, null,  entity);
+                            }
                         }
                     }
                     // Delete dead entities
@@ -88,6 +93,42 @@ public class GameModel {
         for (IEnemy enemy : this.enemies) {
             enemy.start();
         }
+    }
+
+    public void freezeEnemies() {
+        for (IEnemy enemy : this.enemies) {
+            enemy.pause();
+        }
+    }
+
+    public void stopEnemies() {
+        for (IEnemy enemy : this.enemies) {
+            enemy.stop();
+        }
+    }
+
+    public void resumeEnemies() {
+        for (IEnemy enemy : this.enemies) {
+            enemy.resume();
+        }
+    }
+
+
+    public void addPropertyChangeListener(String property, PropertyChangeListener l) {
+        if (l == null) {
+            throw new AssertionError("l'écouteur est null");
+        }
+        if (propertySupport == null) {
+            propertySupport = new PropertyChangeSupport(this);
+        }
+        propertySupport.addPropertyChangeListener(property, l);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener l) {
+        if (propertySupport == null) {
+            propertySupport = new PropertyChangeSupport(this);
+        }
+        propertySupport.removePropertyChangeListener(l);
     }
 
     // OUTILS
@@ -148,18 +189,6 @@ public class GameModel {
         assert enemies != null;
         for (IEnemy e : enemies) {
             this.setEnemy(e);
-        }
-    }
-
-    private void freezeEnemies() {
-        for (IEnemy enemy : enemies) {
-            enemy.pause();
-        }
-    }
-
-    private void resumeEnemies() {
-        for (IEnemy enemy : enemies) {
-            enemy.resume();
         }
     }
 

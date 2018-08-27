@@ -12,9 +12,9 @@ public class EnemyFactory {
             "Zombie",
             "Groohhrrg",
             EnemyFactory.class.getResource("../../enemy3.png").toURI(),
-            2,
-            0,
-            5
+            20,
+            50,
+            50
         );
     }
 

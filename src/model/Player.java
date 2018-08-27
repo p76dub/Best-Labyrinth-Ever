@@ -114,6 +114,10 @@ public class Player implements IPlayer {
         propertySupport.firePropertyChange(DEFENSE_PROPERTY, oldDefensivePoints, getDefensivePoints());
         propertySupport.firePropertyChange(ATTACK_PROPERTY, oldAttackPoints, getAttackPoints());
         propertySupport.firePropertyChange(LIFE_PROPERTY, oldLifePoints, getLifePoints());
+
+        if (lifePoints == 0) {
+            propertySupport.firePropertyChange(DEAD_PROPERTY, false, true);
+        }
     }
 
     @Override
@@ -146,7 +150,9 @@ public class Player implements IPlayer {
         if (points < 0) {
             throw new AssertionError();
         }
+        int oldLifePoints = getLifePoints();
         this.lifePoints = points;
+        propertySupport.firePropertyChange(LIFE_PROPERTY, oldLifePoints, points);
     }
 
     @Override
