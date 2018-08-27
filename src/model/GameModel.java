@@ -60,6 +60,11 @@ public class GameModel {
                     // Delete dead entities
                     stopAndRemoveDeadEnemies();
 
+                    // Delete player if he died
+                    if (getPlayer().isDead()) {
+                        keeper.deleteEntity(getPlayer());
+                    }
+
                     // Finally, resume all enemies
                     resumeEnemies();
                 }
@@ -130,6 +135,9 @@ public class GameModel {
                 freezeEnemies();
                 executeCombat(enemy, GameModel.this.player);
                 stopAndRemoveDeadEnemies();
+                if (getPlayer().isDead()) {
+                    keeper.deleteEntity(getPlayer());
+                }
                 resumeEnemies();
             }
         });
