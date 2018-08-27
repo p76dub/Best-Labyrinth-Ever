@@ -131,7 +131,7 @@ public class Parameter {
     private void createController() {
         validate.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                new Game().display();
+                new Game(textName.getText()).display();
                 mainFrame.dispose();
             }
         });

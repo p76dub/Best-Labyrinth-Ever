@@ -4,7 +4,6 @@ import model.EntityPositionKeeper;
 import model.Maze;
 import model.Room;
 import model.interfaces.IEntity;
-import model.interfaces.IPlayer;
 import model.interfaces.IRoom;
 import util.Direction;
 

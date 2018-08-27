@@ -36,9 +36,9 @@ public class Game {
 
 
     // CONSTRUCTEUR
-    public Game() {
+    public Game(String name) {
         try {
-            createModel();
+            createModel(name);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -66,14 +66,16 @@ public class Game {
     }
 
     // OUTILS
-    private void createModel() throws URISyntaxException {
+    private void createModel(String name) throws URISyntaxException {
         IMaze maze = new Maze(10, 10);
         GeneratorFactory.backTrackingGenerator(maze);
 
-        IPlayer player = generatorPlayer("test");
+        IPlayer player = generatorPlayer(name);
 
         Collection< IEnemy > enemies = new ArrayList<>();
         enemies.add(EnemyFactory.createZombie());
+        enemies.add(EnemyFactory.createZombie2());
+        //enemies.add(EnemyFactory.createZombie3());
 
         Collection<IItem> items = generatorItems(3);
 
@@ -181,7 +183,7 @@ public class Game {
                                     getModel().stopEnemies();
                                     JOptionPane.showMessageDialog(
                                             mainFrame,
-                                            "Félicitations " + getPlayer().getName() + ", tu as gagné !",
+                                            "Félicitation " + getPlayer().getName() + ", tu as gagné !",
                                             "Victoire",
                                             JOptionPane.PLAIN_MESSAGE
                                     );
@@ -328,7 +330,7 @@ public class Game {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new Game().display();
+                new Game("test").display();
             }
         });
     }
