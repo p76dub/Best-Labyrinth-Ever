@@ -2,8 +2,6 @@ package view;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.*;
@@ -19,11 +17,13 @@ public class Menu {
     private JMenu parameters;
 
     private JMenuItem newGame;
+    private JMenuItem againGame;
     private JMenuItem quitGame;
     private JMenuItem quit;
     private JMenuItem rule;
 
     private Parameter params;
+    private String namePlayer;
     private Game game;
     private JPanel first;
 
@@ -44,7 +44,11 @@ public class Menu {
         parameters = new JMenu("Paramètres");
 
         newGame = new JMenuItem("Nouvelle partie");
+        againGame = new JMenuItem("Recommencer le type de partie");
+        againGame.setEnabled(false);
         quitGame = new JMenuItem("Quitter la partie");
+        quitGame.setEnabled(false);
+
         quit = new JMenuItem("Fermer");
         rule = new JMenuItem("Règles du jeu");
 
@@ -64,6 +68,7 @@ public class Menu {
     private void placeComponents() {
         //On initialise nos menus
         this.play.add(newGame);
+        this.play.add(againGame);
 
         //Ajout d'un séparateur
         this.play.addSeparator();
@@ -88,7 +93,60 @@ public class Menu {
     private void createController() {
         quit.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent arg0) {
-                System.exit(0);
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.exit(0);
+                    }
+                });
+            }
+        });
+
+        newGame.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent arg0) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        game = null;
+                        params = new Parameter();
+                        againGame.setEnabled(false);
+                        quitGame.setEnabled(false);
+                        first.removeAll();
+                        first.add(params);
+                        first.revalidate();
+                    }
+                });
+            }
+        });
+
+        againGame.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent arg0) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        game = new Game(namePlayer, mainFrame);
+                        first.removeAll();
+                        first.add(game);
+                        first.revalidate();
+                    }
+                });
+            }
+        });
+
+        quitGame.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent arg0) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        game = null;
+                        params = new Parameter();
+                        againGame.setEnabled(false);
+                        quitGame.setEnabled(false);
+                        first.removeAll();
+                        first.add(params);
+                        first.revalidate();
+                    }
+                });
             }
         });
 
@@ -99,9 +157,14 @@ public class Menu {
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                String namePlayer = (String) evt.getNewValue();
                                 mainFrame.requestFocus();
+
+                                namePlayer = (String) evt.getNewValue();
                                 game = new Game(namePlayer, mainFrame);
+
+                                quitGame.setEnabled(true);
+                                againGame.setEnabled(true);
+
                                 first.removeAll();
                                 first.add(game);
                                 first.revalidate();
