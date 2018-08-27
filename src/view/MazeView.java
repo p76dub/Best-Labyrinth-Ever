@@ -1,9 +1,8 @@
 package view;
 
-import model.Maze;
-import model.generators.GeneratorFactory;
 import model.interfaces.IMaze;
 import model.interfaces.IRoom;
+import model.maze.MazeFactory;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -37,7 +36,6 @@ public class MazeView extends JPanel {
 
     // COMMANDES
     public void setModel(IMaze model) {
-        GeneratorFactory.growingTreeGeneration(model);
         IRoom[][] allRooms = model.getRooms();
         for (int i = 0; i < model.colsNb(); ++i) {
             for (int j = 0; j < model.rowsNb(); ++j) {
@@ -98,11 +96,11 @@ public class MazeView extends JPanel {
             IMaze model;
             public Bla() {
                 try {
-                    model = new Maze();
+                    model = MazeFactory.backTrackingGenerator(IMaze.DEFAULT_WIDTH, IMaze.DEFAULT_HEIGHT);
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
-                GeneratorFactory.backTrackingGenerator(model);
+
                 mainFrame.add(new MazeView(model), BorderLayout.CENTER);
                 mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             }

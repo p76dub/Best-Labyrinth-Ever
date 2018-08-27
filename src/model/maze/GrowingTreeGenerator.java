@@ -1,11 +1,13 @@
-package model.generators;
+package model.maze;
 
 import model.RoomNetwork;
+import model.interfaces.IMaze;
 import model.interfaces.INetwork;
 import model.interfaces.IRoom;
 import util.Direction;
 import util.Entry;
 
+import java.net.URISyntaxException;
 import java.util.*;
 
 /**
@@ -33,29 +35,8 @@ import java.util.*;
  * </ul>
  */
 class GrowingTreeGenerator extends AbstractGenerator {
-    // ATTRIBUTS
-    private IRoom entry;
-    private IRoom exit;
-    private IRoom princess;
-
-    // CONSTRUCTEUR
-    public GrowingTreeGenerator(IRoom[][] rooms) {
-        super(rooms);
-    }
-
-    @Override
-    public IRoom getEntry() {
-        return entry;
-    }
-
-    @Override
-    public IRoom getExit() {
-        return exit;
-    }
-
-    @Override
-    public IRoom getPrincessRoom() {
-        return princess;
+    public GrowingTreeGenerator(int width, int height) throws URISyntaxException {
+        super(width, height);
     }
 
     @Override
@@ -63,7 +44,7 @@ class GrowingTreeGenerator extends AbstractGenerator {
         // Garder une trace des pièces visitées
         List<Entry> opened = new LinkedList<>();
         List<Entry> closed = new ArrayList<>();
-        INetwork<IRoom, Direction> network = RoomNetwork.getInstance();
+        INetwork<IRoom, Direction> network = getMaze().getNetwork();
 
         opened.add(pickRandomRoom());
 

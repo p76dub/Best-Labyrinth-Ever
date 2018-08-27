@@ -1,10 +1,10 @@
 package view;
 
 import model.EntityPositionKeeper;
-import model.Maze;
 import model.Room;
 import model.interfaces.IEntity;
 import model.interfaces.IRoom;
+import model.maze.MazeFactory;
 import util.Direction;
 
 import javax.swing.*;
@@ -147,7 +147,9 @@ public class RoomView extends JPanel {
             JFrame mainFrame = new JFrame();
             public Bla() {
                 try {
-                    mainFrame.add(new RoomView(new Room(new Maze())), BorderLayout.CENTER);
+                    mainFrame.add(new RoomView(
+                            new Room(MazeFactory.backTrackingGenerator(4, 4))),
+                            BorderLayout.CENTER);
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }

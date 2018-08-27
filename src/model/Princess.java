@@ -23,17 +23,17 @@ public class Princess implements IPrincess {
      * @param image le chemin vers l'image de la princesse
      * @param room la pièce où se situe la princesse
      * @pre <pre>
-     *     message != null && image != null && room != null
+     *     message != null && image != null
      * </pre>
      * @post <pre>
      *     getMessage().equals(message)
      *     getMazeImagePath().equals(image)
-     *     getRoom().equals(room)
+     *     room != null => getRoom().equals(room)
      *     !safe
      * </pre>
      */
     public Princess(String message, URI image, IRoom room) {
-        if (message == null || image == null || room == null) {
+        if (message == null || image == null) {
             throw new AssertionError();
         }
         this.message = message;
@@ -84,5 +84,13 @@ public class Princess implements IPrincess {
             propertySupport = new PropertyChangeSupport(this);
         }
         propertySupport.removePropertyChangeListener(l);
+    }
+
+    @Override
+    public void setRoom(IRoom room) {
+        if (room == null) {
+            throw new NullPointerException();
+        }
+        this.location = room;
     }
 }

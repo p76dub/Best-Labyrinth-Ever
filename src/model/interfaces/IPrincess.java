@@ -41,5 +41,5 @@ public interface IPrincess {
 
     void addPropertyChangeListener(String property, PropertyChangeListener l);
     void removePropertyChangeListener(PropertyChangeListener l);
-
+    void setRoom(IRoom room);
 }

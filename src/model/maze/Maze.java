@@ -1,23 +1,26 @@
-package model;
+package model.maze;
 
+import model.Princess;
+import model.Room;
+import model.RoomNetwork;
 import model.interfaces.IMaze;
+import model.interfaces.INetwork;
 import model.interfaces.IPrincess;
 import model.interfaces.IRoom;
+import util.Direction;
 
 import java.net.URISyntaxException;
-import java.util.Random;
 
-public class Maze implements IMaze {
+class Maze implements IMaze {
     // STATICS
-    private static final int DEFAULT_WIDTH = 15;
-    private static final int DEFAULT_HEIGHT = 15;
     private static final String PRINCESS_MESSAGE = "Merci de m'avoir sauvé merciiire";
 
     // ATTRIBUTS
     private final IRoom[][] rooms;
-    private final IRoom entry;
-    private final IRoom exit;
+    private IRoom entry;
+    private IRoom exit;
     private final IPrincess princess;
+    private final INetwork<IRoom, Direction> network;
 
     // CONSTRUCTOR
     /**
@@ -34,7 +37,7 @@ public class Maze implements IMaze {
      * </pre>
      * @throws URISyntaxException if the princess picture uri is malformed
      */
-    public Maze(int width, int height) throws URISyntaxException {
+    Maze(int width, int height) throws URISyntaxException {
         if (width <= 0 || height <= 0) {
             throw new IllegalArgumentException();
         }
@@ -45,24 +48,12 @@ public class Maze implements IMaze {
                 rooms[i][j] = new Room(this);
             }
         }
+        network = new RoomNetwork();
 
-        entry = pickRandomRoom();
-
-        IRoom exit = pickRandomRoom();
-        while (exit.equals(entry)) {
-            exit = pickRandomRoom();
-        }
-        this.exit = exit;
-
-        IRoom princessRoom = pickRandomRoom();
-        while (princessRoom.equals(exit) || princessRoom.equals(entry)) {
-            princessRoom = pickRandomRoom();
-        }
-        //TODO IMAGE
         princess = new Princess(
             PRINCESS_MESSAGE,
-                getClass().getResource("../coeur.png").toURI(),
-                princessRoom
+            getClass().getResource("../../coeur.png").toURI(),
+            null
         );
     }
 
@@ -72,14 +63,14 @@ public class Maze implements IMaze {
      * @pre size > 0
      * @post colsNb() == rowsNb() == size
      */
-    public Maze(int size) throws URISyntaxException {
+    Maze(int size) throws URISyntaxException {
         this(size, size);
     }
 
     /**
      * Créer un labyrinthe avec une hauteur et une largeur par défaut.
      */
-    public Maze() throws URISyntaxException {
+    Maze() throws URISyntaxException {
         this(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
@@ -114,15 +105,26 @@ public class Maze implements IMaze {
     }
 
     @Override
+    public INetwork<IRoom, Direction> getNetwork() {
+        return network;
+    }
+
+    @Override
     public void mark(IRoom r) {
 
     }
 
-    // OUTILS
-    private IRoom pickRandomRoom() {
-        Random generator = new Random();
-        int x = generator.nextInt(rowsNb());
-        int y = generator.nextInt(colsNb());
-        return getRooms()[y][x];
+    void setEntry(IRoom room) {
+        if (room == null) {
+            throw new NullPointerException();
+        }
+        this.entry = room;
+    }
+
+    void setExit(IRoom room) {
+        if (room == null) {
+            throw new NullPointerException();
+        }
+        this.exit = room;
     }
 }

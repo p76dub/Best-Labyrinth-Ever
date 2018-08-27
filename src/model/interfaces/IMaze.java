@@ -1,5 +1,7 @@
 package model.interfaces;
 
+import util.Direction;
+
 /**
  * Le labyrinthe des pièces, rectangulaire (rows * cols).
  * @inv <pre>
@@ -18,6 +20,9 @@ public interface IMaze {
             super(cause);
         }
     }
+
+    int DEFAULT_WIDTH = 15;
+    int DEFAULT_HEIGHT = 15;
 
     // Requêtes
     /**
@@ -53,6 +58,8 @@ public interface IMaze {
      * @return la princesse
      */
     IPrincess getPrincess();
+
+    INetwork<IRoom, Direction> getNetwork();
 
     /**
      * Marque la pièce r comme visitée (utilisé lors de l'affichage du

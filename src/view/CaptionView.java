@@ -2,13 +2,12 @@ package view;
 
 import model.EntityPositionKeeper;
 import model.GameModel;
-import model.Maze;
 import model.Player;
 import model.enemies.EnemyFactory;
-import model.generators.GeneratorFactory;
 import model.interfaces.IMaze;
 import model.interfaces.IPlayer;
 import model.interfaces.IPrincess;
+import model.maze.MazeFactory;
 import util.Direction;
 
 import javax.swing.*;
@@ -253,8 +252,7 @@ public class CaptionView extends JPanel {
 
                 IPlayer player = new Player("test", 1, 1, 1, map);
 
-                IMaze maze = new Maze();
-                GeneratorFactory.backTrackingGenerator(maze);
+                IMaze maze = MazeFactory.backTrackingGenerator(IMaze.DEFAULT_WIDTH, IMaze.DEFAULT_HEIGHT);
 
                 Collection enemies = new ArrayList();
                 enemies.add(EnemyFactory.createZombie());

@@ -8,31 +8,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Pattern singleton. Le RoomNetwork est unique et partagé par toutes les pièces.
- * @inv <pre>
- *     RoomNetwork.getInstance() != null
- * </pre>
+ * Un réseau de pièces connectées entre elles.
  */
 public class RoomNetwork implements INetwork<IRoom, Direction> {
-    // STATICS
-    // Instance unique du réseau
-    private static INetwork<IRoom, Direction> INSTANCE;
-
-    /**
-     * Obtenir l'instance unique RoomNetwork.
-     * @return instance unique
-     */
-    public static INetwork<IRoom, Direction> getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new RoomNetwork();
-        }
-        return INSTANCE;
-    }
 
     // ATTRIBUTES
     private final Map<IRoom, Map<Direction, IRoom>> network;
 
-    private RoomNetwork() {
+    public RoomNetwork() {
         network = new HashMap<>();
     }
 

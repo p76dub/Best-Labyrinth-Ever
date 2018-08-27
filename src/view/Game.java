@@ -2,8 +2,9 @@ package view;
 
 import model.*;
 import model.enemies.EnemyFactory;
-import model.generators.GeneratorFactory;
 import model.interfaces.*;
+import model.maze.IMazeGenerator;
+import model.maze.MazeFactory;
 import util.Direction;
 
 import javax.swing.*;
@@ -67,8 +68,7 @@ public class Game {
 
     // OUTILS
     private void createModel(String name) throws URISyntaxException {
-        IMaze maze = new Maze(10, 10);
-        GeneratorFactory.backTrackingGenerator(maze);
+        IMaze maze = MazeFactory.backTrackingGenerator(10, 10);
 
         IPlayer player = generatorPlayer(name);
 

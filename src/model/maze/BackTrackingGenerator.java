@@ -1,4 +1,4 @@
-package model.generators;
+package model.maze;
 
 import model.RoomNetwork;
 import model.interfaces.IMaze;
@@ -7,34 +7,19 @@ import model.interfaces.IRoom;
 import util.Direction;
 import util.Entry;
 
+import java.net.URISyntaxException;
 import java.util.*;
 
 class BackTrackingGenerator extends AbstractGenerator {
-    // CONSTRUCTEUR
-    public BackTrackingGenerator(IRoom[][] rooms) {
-        super(rooms);
-    }
-
-    @Override
-    public IRoom getEntry() {
-        return null;
-    }
-
-    @Override
-    public IRoom getExit() {
-        return null;
-    }
-
-    @Override
-    public IRoom getPrincessRoom() {
-        return null;
+    public BackTrackingGenerator(int width, int height) throws URISyntaxException {
+        super(width, height);
     }
 
     @Override
     public void generate() {
         Deque<Entry> stack = new LinkedList<>();
         Set<Entry> closed = new HashSet<>();
-        INetwork<IRoom, Direction> network = RoomNetwork.getInstance();
+        INetwork<IRoom, Direction> network = getMaze().getNetwork();
 
         stack.push(pickRandomRoom());
         while (!stack.isEmpty()) {
@@ -55,6 +40,6 @@ class BackTrackingGenerator extends AbstractGenerator {
                 closed.add(src);
             }
         }
+        placeSpecialRooms();
     }
-
 }

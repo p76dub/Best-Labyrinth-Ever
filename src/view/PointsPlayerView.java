@@ -1,10 +1,10 @@
 package view;
 
 import model.EntityPositionKeeper;
-import model.Maze;
 import model.Player;
 import model.interfaces.IMaze;
 import model.interfaces.IPlayer;
+import model.maze.MazeFactory;
 import util.Direction;
 
 import javax.swing.*;
@@ -205,7 +205,7 @@ public class PointsPlayerView extends JPanel {
                 //TODO à changer disparaitre room & maze
                 IMaze maze = null;
                 try {
-                    maze = new Maze();
+                    maze = MazeFactory.growingTreeGeneration(IMaze.DEFAULT_WIDTH, IMaze.DEFAULT_HEIGHT);
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }

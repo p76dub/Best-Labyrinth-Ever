@@ -1,7 +1,6 @@
 package test;
 
-import model.Maze;
-import model.generators.GeneratorFactory;
+import model.maze.MazeFactory;
 import model.interfaces.IMaze;
 import model.interfaces.IRoom;
 import util.Direction;
@@ -10,9 +9,9 @@ import java.net.URISyntaxException;
 
 public class TestMaze {
 
-    private Maze maze;
+    private IMaze maze;
 
-    public TestMaze(Maze m) {
+    public TestMaze(IMaze m) {
       this.maze = m;
     }
 
@@ -159,11 +158,10 @@ public class TestMaze {
     public static void main(String[] args) {
         TestMaze game = null;
         try {
-            game = new TestMaze(new Maze(20,20));
+            game = new TestMaze(MazeFactory.growingTreeGeneration(20,20));
+            System.out.println(game.describe());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        GeneratorFactory.growingTreeGeneration(game.getMaze());
-        System.out.println(game.describe());
     }
 }

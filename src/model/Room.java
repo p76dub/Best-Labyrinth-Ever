@@ -47,12 +47,12 @@ public class Room implements IRoom {
 
     @Override
     public boolean canExitIn(Direction d) {
-        return RoomNetwork.getInstance().get(this, d) != null;
+        return maze.getNetwork().get(this, d) != null;
     }
 
     @Override
     public IRoom getRoomIn(Direction d) {
-        return RoomNetwork.getInstance().get(this, d);
+        return maze.getNetwork().get(this, d);
     }
 
     @Override

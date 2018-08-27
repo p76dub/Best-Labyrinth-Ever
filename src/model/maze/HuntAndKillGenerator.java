@@ -1,11 +1,11 @@
-package model.generators;
+package model.maze;
 
-import model.RoomNetwork;
 import model.interfaces.INetwork;
 import model.interfaces.IRoom;
 import util.Direction;
 import util.Entry;
 
+import java.net.URISyntaxException;
 import java.util.*;
 
 class HuntAndKillGenerator extends AbstractGenerator {
@@ -13,27 +13,12 @@ class HuntAndKillGenerator extends AbstractGenerator {
     private final float huntProbability;
 
     // CONSTRUCTEUR
-    public HuntAndKillGenerator(IRoom[][] rooms, float huntProbability) {
-        super(rooms);
+    public HuntAndKillGenerator(int width, int height, float huntProbability) throws URISyntaxException {
+        super(width, height);
         if (0 > huntProbability || huntProbability > 1) {
             throw new IllegalArgumentException();
         }
         this.huntProbability = huntProbability;
-    }
-
-    @Override
-    public IRoom getEntry() {
-        return null;
-    }
-
-    @Override
-    public IRoom getExit() {
-        return null;
-    }
-
-    @Override
-    public IRoom getPrincessRoom() {
-        return null;
     }
 
     @Override
@@ -43,7 +28,7 @@ class HuntAndKillGenerator extends AbstractGenerator {
         List<Entry> closed = new ArrayList<>();
 
         // Raccourci vers le network
-        INetwork<IRoom, Direction> network = RoomNetwork.getInstance();
+        INetwork<IRoom, Direction> network = getMaze().getNetwork();
 
         // Selection du point d'entrée
         Entry src = pickRandomRoom();
@@ -84,6 +69,8 @@ class HuntAndKillGenerator extends AbstractGenerator {
             neighbours = accessibleRoomsFrom(src, closed, new ArrayList<>());
             huntCandidates.addAll(neighbours.values());
         }
+
+        placeSpecialRooms();
     }
 
     // OUTILS
@@ -92,8 +79,8 @@ class HuntAndKillGenerator extends AbstractGenerator {
         int y = src.getY();
 
         // Raccourcis
-        IRoom[][] rooms = getRooms();
-        INetwork<IRoom, Direction> network = RoomNetwork.getInstance();
+        IRoom[][] rooms = getMaze().getRooms();
+        INetwork<IRoom, Direction> network = getMaze().getNetwork();
 
         // La pièce à laquelle se connecter, avec la direction
         IRoom dst = null;
