@@ -2,6 +2,7 @@ package model;
 
 import model.interfaces.*;
 
+import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -173,13 +174,26 @@ public class GameModel {
             EntityPositionKeeper keeper = EntityPositionKeeper.getInstance();
             Collection<IEntity> entities = keeper.getEntities((IRoom) evt.getNewValue());
             if (entities.contains(GameModel.this.player)) {
-                freezeEnemies();
-                executeCombat(enemy, GameModel.this.player);
-                stopAndRemoveDeadEnemies();
-                if (getPlayer().isDead()) {
-                    keeper.deleteEntity(getPlayer());
-                }
-                resumeEnemies();
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Freeze every one
+                        freezeEnemies();
+
+                        // Execute combat
+                        executeCombat(enemy, GameModel.this.player);
+
+                        if (GameModel.this.player.isDead()) {
+                            keeper.deleteEntity(getPlayer());
+                            propertySupport.firePropertyChange(IPlayer.KILL_PROPERTY, null, enemy);
+                        } else {
+                            GameModel.this.enemies.remove(enemy);
+                            EntityPositionKeeper.getInstance().deleteEntity(enemy);
+                            enemy.stop();
+                        }
+                        resumeEnemies();
+                    }
+                });
             }
         });
 

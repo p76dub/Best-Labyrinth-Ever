@@ -14,9 +14,8 @@ public class Main {
             maze = MazeFactory.growingTreeGeneration(6, 6);
         } catch (URISyntaxException e) {
             e.printStackTrace();
+            return;
         }
-
-
         INetwork<IRoom, Direction> network = maze.getNetwork();
 
         for (int i = 0; i < maze.rowsNb(); ++i) {

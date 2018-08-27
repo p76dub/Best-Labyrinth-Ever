@@ -1,9 +1,10 @@
 package view;
 
-import model.*;
+import model.GameModel;
+import model.Item;
+import model.Player;
 import model.enemies.EnemyFactory;
 import model.interfaces.*;
-import model.maze.IMazeGenerator;
 import model.maze.MazeFactory;
 import util.Direction;
 

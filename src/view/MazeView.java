@@ -73,8 +73,7 @@ public class MazeView extends JPanel {
         }
     }
 
-    private void createController() {
-    }
+    private void createController() {}
 
     private void exitAndEntrySee() {
         for (int i = 0; i < model.colsNb(); ++i) {

@@ -78,33 +78,25 @@ public class RoomView extends JPanel {
 
     private void createController() {
         EntityPositionKeeper.getInstance().addPropertyChangeListener(EntityPositionKeeper.ROOM_PROPERTY,
-            new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (evt.getOldValue() != null && evt.getOldValue().equals(model)) {
-                                image.removeAll();
-                                if (EntityPositionKeeper.getInstance().getEntities(model).size() == 0) {
-                                    //Rajoute le bonbon si a pas été déja pris
-                                    if (model.getItem() != null && !model.getItem().isTaken()) {
-                                        imageCandy();
-                                    }
-                                    if (model.getMaze().getPrincess().getRoom().equals(model) && !model.getMaze().getPrincess().isSafe()) {
-                                        imagePrincess();
-                                    }
-                                } else {
-                                    imageEntity();
-                                }
+                evt -> SwingUtilities.invokeLater(() -> {
+                    if (evt.getOldValue() != null && evt.getOldValue().equals(model)) {
+                        image.removeAll();
+                        if (EntityPositionKeeper.getInstance().getEntities(model).size() == 0) {
+                            //Rajoute le bonbon si a pas été déja pris
+                            if (model.getItem() != null && !model.getItem().isTaken()) {
+                                imageCandy();
                             }
-                            if (evt.getNewValue().equals(model)) {
-                                imageEntity();
+                            if (model.getMaze().getPrincess().getRoom().equals(model) && !model.getMaze().getPrincess().isSafe()) {
+                                imagePrincess();
                             }
+                        } else {
+                            imageEntity();
                         }
-                    });
-                }
-            }
+                    }
+                    if (evt.getNewValue().equals(model)) {
+                        imageEntity();
+                    }
+                })
         );
     }
 
