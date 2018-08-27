@@ -114,14 +114,19 @@ public class PointsPlayerView extends JPanel {
             new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
-                    panelLife.removeAll();
-                    JPanel p = new JPanel(new FlowLayout()); {
-                        p.add(imageLife());
-                        JLabel caption = new JLabel("x" + (int) evt.getNewValue());
-                        p.add(caption);
-                    }
-                    panelLife.add(p);
-                    panelLife.revalidate();
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            panelLife.removeAll();
+                            JPanel p = new JPanel(new FlowLayout()); {
+                                p.add(imageLife());
+                                JLabel caption = new JLabel("x" + (int) evt.getNewValue());
+                                p.add(caption);
+                            }
+                            panelLife.add(p);
+                            panelLife.revalidate();
+                        }
+                    });
                 }
             }
         );

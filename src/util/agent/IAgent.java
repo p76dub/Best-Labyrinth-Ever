@@ -1,5 +1,7 @@
 package util.agent;
 
+import util.message.IMessage;
+
 import java.util.Collection;
 
 /**
@@ -79,4 +81,8 @@ public interface IAgent {
      * Reprendre l'exécution de l'agent.
      */
     void resume();
+
+    void send(IMessage msg);
+
+    void receive(IMessage msg);
 }

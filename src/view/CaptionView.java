@@ -122,7 +122,12 @@ public class CaptionView extends JPanel {
                 new PropertyChangeListener() {
                     @Override
                     public void propertyChange(PropertyChangeEvent evt) {
-                        candyCounter();
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                candyCounter();
+                            }
+                        });
                     }
                 }
         );
@@ -131,25 +136,35 @@ public class CaptionView extends JPanel {
                 new PropertyChangeListener() {
                     @Override
                     public void propertyChange(PropertyChangeEvent evt) {
-                        savePrincess.removeAll();
-                        JPanel s = new JPanel(new FlowLayout());
-                        {
-                            s.add(imagePrincess());
-                            JLabel caption = new JLabel("princesse sauvée");
-                            s.add(caption);
-                        }
-                        savePrincess.add(s);
-                        savePrincess.revalidate();
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                savePrincess.removeAll();
+                                JPanel s = new JPanel(new FlowLayout());
+                                {
+                                    s.add(imagePrincess());
+                                    JLabel caption = new JLabel("princesse sauvée");
+                                    s.add(caption);
+                                }
+                                savePrincess.add(s);
+                                savePrincess.revalidate();
+                            }
+                        });
                     }
                 }
         );
 
         EntityPositionKeeper.getInstance().addPropertyChangeListener(
-            EntityPositionKeeper.REMOVE_ENTITY_PROPERTY,
+            EntityPositionKeeper.REMOVED_ENTITY_PROPERTY,
             new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
-                    enemiesCounter();
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            enemiesCounter();
+                        }
+                    });
                 }
             }
         );

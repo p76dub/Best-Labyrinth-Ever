@@ -1,5 +1,7 @@
 package util.agent;
 
+import util.message.IMessage;
+
 import java.util.*;
 
 public class Agent implements IAgent {
@@ -85,6 +87,7 @@ public class Agent implements IAgent {
     private final List<IBehaviour> behaviours;
     private final String name;
     private InternalThread internalThread;
+    private Queue<IMessage> queue;
 
     // CONSTRUCTEUR
     public Agent(String name) {
@@ -94,6 +97,7 @@ public class Agent implements IAgent {
         this.name = name;
         behaviours = new LinkedList<>();
         internalThread = new InternalThread();
+        queue = new LinkedList<>();
     }
 
     // REQUETES
@@ -202,5 +206,20 @@ public class Agent implements IAgent {
         synchronized (state) {
             state.notifyAll();
         }
+    }
+
+    @Override
+    public void send(IMessage msg) {
+        msg.getReceiver().receive(msg);
+    }
+
+    @Override
+    public void receive(IMessage msg) {
+        queue.offer(msg);
+    }
+
+    // OUTILS
+    protected IMessage getNextMessage() {
+        return queue.poll();
     }
 }

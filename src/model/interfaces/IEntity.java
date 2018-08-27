@@ -2,6 +2,7 @@ package model.interfaces;
 
 import util.Direction;
 
+import java.beans.PropertyChangeListener;
 import java.net.URI;
 
 /**
@@ -101,4 +102,7 @@ public interface IEntity {
      * @post getOrientation().equals(d);
      */
     void setOrientation(Direction d);
+
+    void addPropertyChangeListener(String property, PropertyChangeListener l);
+    void removePropertyChangeListener(PropertyChangeListener l);
 }

@@ -12,6 +12,9 @@ import java.net.URI;
  * </pre>
  */
 public interface IEnemy extends IEntity, IAgent {
+    // STATICS
+    String POSITION_PROPERTY = "position";
+
     // Requêtes
     /**
      * Retourne le message affiché lorsque l'ennemy rencontre le joueur.

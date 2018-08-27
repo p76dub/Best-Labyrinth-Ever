@@ -1,7 +1,5 @@
 package model.interfaces;
 
-import java.beans.PropertyChangeListener;
-
 public interface IPlayer extends IEntity {
 
     // STATICS
@@ -16,8 +14,4 @@ public interface IPlayer extends IEntity {
      * @param item
      */
     void take(IItem item);
-
-    void addPropertyChangeListener(String property, PropertyChangeListener l);
-    void removePropertyChangeListener(PropertyChangeListener l);
-
 }

@@ -43,31 +43,26 @@ public class GameModel {
         this.items = new ArrayList<>(items);
         setItems(this.items);
 
-        keeper.addPropertyChangeListener(EntityPositionKeeper.ROOM_PROPERTY, new PropertyChangeListener() {
+        this.player.addPropertyChangeListener(IPlayer.POSITION_PROPERTY, new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
+                Collection<IEntity> entities = keeper.getEntities((IRoom) evt.getNewValue());
+                if (entities.size() > 1) {
+                    // First, freeze all enemies
+                    freezeEnemies();
 
-                IRoom room = (IRoom) evt.getNewValue();
-                Collection<IEntity> entities = keeper.getEntities(room);
-                if (!entities.contains(player) || entities.size() <= 1) {
-                    return;
-                }
-
-                freezeEnemies();
-
-                for (IEntity entity : entities) {
-                    if (!entity.equals(player) && !player.isDead()) {
-                        while (!player.isDead() && !entity.isDead()) {
-                            player.attack(entity);
-                            if (!entity.isDead()) {
-                                entity.attack(player);
-                            }
+                    // Then, resolve combat(s)
+                    for (IEntity entity : entities) {
+                        if (!entity.equals(GameModel.this.player)) {
+                            executeCombat(GameModel.this.player, entity);
                         }
                     }
-                }
+                    // Delete dead entities
+                    stopAndRemoveDeadEnemies();
 
-                stopAndRemoveDeadEnemies();
-                resumeEnemies();
+                    // Finally, resume all enemies
+                    resumeEnemies();
+                }
             }
         });
     }
@@ -127,6 +122,18 @@ public class GameModel {
                 positioned = true;
             }
         }
+
+        enemy.addPropertyChangeListener(IEnemy.POSITION_PROPERTY, evt -> {
+            EntityPositionKeeper keeper = EntityPositionKeeper.getInstance();
+            Collection<IEntity> entities = keeper.getEntities((IRoom) evt.getNewValue());
+            if (entities.contains(GameModel.this.player)) {
+                freezeEnemies();
+                executeCombat(enemy, GameModel.this.player);
+                stopAndRemoveDeadEnemies();
+                resumeEnemies();
+            }
+        });
+
     }
 
     private void setEnemies(List<IEnemy> enemies) {
@@ -152,11 +159,20 @@ public class GameModel {
         List<IEnemy> deleted = new ArrayList<>();
         for (IEnemy enemy : enemies) {
             if (enemy.isDead()) {
-                enemy.stop();
                 deleted.add(enemy);
                 EntityPositionKeeper.getInstance().deleteEntity(enemy);
+                enemy.stop();
             }
         }
         this.enemies.removeAll(deleted);
+    }
+
+    private void executeCombat(IEntity attacker, IEntity defender) {
+        while (!attacker.isDead() && !defender.isDead()) {
+            attacker.attack(defender);
+            if (!defender.isDead()) {
+                defender.attack(attacker);
+            }
+        }
     }
 }

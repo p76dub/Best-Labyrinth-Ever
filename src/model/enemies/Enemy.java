@@ -7,6 +7,8 @@ import model.interfaces.IRoom;
 import util.Direction;
 import util.agent.Agent;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.net.URI;
 
 
@@ -18,6 +20,7 @@ class Enemy extends Agent implements IEnemy {
     private final int defense;
     private int life;
     private Direction orientation;
+    private PropertyChangeSupport propertySupport;
 
     // CONSTRUCTEUR
     public Enemy(String name, String message, URI imagePath, int attack, int defense, int life) {
@@ -34,6 +37,7 @@ class Enemy extends Agent implements IEnemy {
         this.defense = defense;
         this.life = life;
         this.orientation = Direction.EAST;
+        propertySupport = new PropertyChangeSupport(this);
     }
 
     @Override
@@ -93,8 +97,10 @@ class Enemy extends Agent implements IEnemy {
         if (!getRoom().canExitIn(direction)) {
             throw new AssertionError();
         }
+        IRoom old = getRoom();
         setOrientation(direction);
         EntityPositionKeeper.getInstance().move(this, getRoom().getRoomIn(direction));
+        propertySupport.firePropertyChange(IEnemy.POSITION_PROPERTY, old, getRoom());
     }
 
     @Override
@@ -111,5 +117,24 @@ class Enemy extends Agent implements IEnemy {
             throw new NullPointerException();
         }
         this.orientation = d;
+    }
+
+    @Override
+    public void addPropertyChangeListener(String property, PropertyChangeListener l) {
+        if (l == null) {
+            throw new AssertionError("l'écouteur est null");
+        }
+        if (propertySupport == null) {
+            propertySupport = new PropertyChangeSupport(this);
+        }
+        propertySupport.addPropertyChangeListener(property, l);
+    }
+
+    @Override
+    public void removePropertyChangeListener(PropertyChangeListener l) {
+        if (propertySupport == null) {
+            propertySupport = new PropertyChangeSupport(this);
+        }
+        propertySupport.removePropertyChangeListener(l);
     }
 }

@@ -148,10 +148,17 @@ public class Game {
             new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
-                    JOptionPane.showMessageDialog(mainFrame,
-                            ((IItem) evt.getNewValue()).getMessage(),
-                            "Objet trouvé",
-                            JOptionPane.PLAIN_MESSAGE);
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            JOptionPane.showMessageDialog(
+                                    mainFrame,
+                                    ((IItem) evt.getNewValue()).getMessage(),
+                                    "Objet trouvé",
+                                    JOptionPane.PLAIN_MESSAGE
+                            );
+                        }
+                    });
                 }
             }
         );
@@ -163,10 +170,17 @@ public class Game {
                         if (evt.getNewValue().equals(getMaze().getPrincess().getRoom())
                         && !getMaze().getPrincess().isSafe()) {
                             getMaze().getPrincess().save();
-                            JOptionPane.showMessageDialog(mainFrame,
-                                    getMaze().getPrincess().getMessage(),
-                                    "Princesse sauvée",
-                                    JOptionPane.PLAIN_MESSAGE);
+                            SwingUtilities.invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    JOptionPane.showMessageDialog(
+                                            mainFrame,
+                                            getMaze().getPrincess().getMessage(),
+                                            "Princesse sauvée",
+                                            JOptionPane.PLAIN_MESSAGE
+                                    );
+                                }
+                            });
                         }
 
                     }
