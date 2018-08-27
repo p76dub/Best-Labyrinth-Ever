@@ -6,8 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
-public class Parameter {
+public class Parameter extends JPanel {
 
     //CONSTANTES
     public final String[] THEME = { "Aucun", "Harry Potter", "Game Of Throne",
@@ -18,9 +20,9 @@ public class Parameter {
     public final int MIN_ENEMIES = 4;
     public final int MAX_ENEMIES = 10;
     public final int INIT_ENEMIES = 4;
+    public static final String PROPERTY_PARAMETER = "parameter";
 
     // ATTRIBUTS
-    private JFrame mainFrame;
     private JLabel theme;
     private JComboBox themeBox;
     private JLabel name;
@@ -30,6 +32,7 @@ public class Parameter {
     private JSlider difficultyNb;
     private JLabel enemies;
     private JSlider enemiesNb;
+    private PropertyChangeSupport propertySupport;
 
     // CONSTRUCTEUR
     public Parameter() {
@@ -39,27 +42,30 @@ public class Parameter {
         createController();
     }
 
-    // REQUETES
+    //COMMANDES
+    public void addPropertyChangeListener(String property, PropertyChangeListener l) {
+        if (l == null) {
+            throw new AssertionError("l'écouteur est null");
+        }
+        if (propertySupport == null) {
+            propertySupport = new PropertyChangeSupport(this);
+        }
+        propertySupport.addPropertyChangeListener(property, l);
+    }
 
-    // COMMANDES
-    public void display() {
-        mainFrame.pack();
-        mainFrame.setLocationRelativeTo(null);
-        mainFrame.setVisible(true);
+    public void removePropertyChangeListener(PropertyChangeListener l) {
+        if (propertySupport == null) {
+            propertySupport = new PropertyChangeSupport(this);
+        }
+        propertySupport.removePropertyChangeListener(l);
     }
 
     // OUTILS
     private void createModel() {
+        propertySupport = new PropertyChangeSupport(this);
     }
 
     private void createView() {
-        final int frameWidth = 400;
-        final int frameHeight = 400;
-
-        mainFrame = new JFrame("Paramètres du labyrinthe");
-        mainFrame.setPreferredSize(new Dimension(frameWidth, frameHeight));
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         theme = new JLabel("Choisir le thème : ");
         themeBox = new JComboBox(THEME);
         themeBox.setPreferredSize(new Dimension(200, 30));
@@ -89,7 +95,7 @@ public class Parameter {
     }
 
     private void placeComponents() {
-        mainFrame.setLayout(new BorderLayout()); {
+        this.setLayout(new BorderLayout()); {
 
             JPanel linePane = new JPanel(new GridLayout(4,0)); {
 
@@ -119,20 +125,19 @@ public class Parameter {
             }
 
             linePane.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-            mainFrame.add(linePane, BorderLayout.CENTER);
+            this.add(linePane, BorderLayout.CENTER);
 
             JPanel p = new JPanel(); {
                 p.add( validate, BorderLayout.CENTER);
             }
-            mainFrame.add(p, BorderLayout.SOUTH);
+            this.add(p, BorderLayout.SOUTH);
         }
     }
 
     private void createController() {
         validate.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                new Game(textName.getText()).display();
-                mainFrame.dispose();
+                propertySupport.firePropertyChange(PROPERTY_PARAMETER, null, textName.getText());
             }
         });
 
@@ -147,7 +152,19 @@ public class Parameter {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new Parameter().display();
+                final String filename = "Paramètres du labyrinthe";
+
+                final int frameWidth = 800;
+                final int frameHeight = 400;
+
+                JFrame mainFrame = new JFrame(filename);
+                mainFrame.setPreferredSize(new Dimension(frameWidth, frameHeight));
+                mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                mainFrame.pack();
+                mainFrame.setLocationRelativeTo(null);
+                mainFrame.setVisible(true);
+
+                mainFrame.add(new Parameter());
             }
         });
     }
