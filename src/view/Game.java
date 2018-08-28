@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.*;
 
-public class Game {
+public class Game extends JPanel {
 
     //CONSTANTES
     final int MAX_INITIAL_ATTACK_POINTS = 10;
@@ -29,18 +29,17 @@ public class Game {
     final int MIN_INITIAL_LIVE_POINTS = 5;
 
     // ATTRIBUTS
-    private JFrame mainFrame;
     private PointsPlayerView pointsPlayer;
     private MazeView mazeView;
     private GameModel model;
     private CaptionView captionView;
     private boolean resume;
-
+    private JFrame parent;
 
     // CONSTRUCTEUR
-    public Game(String name) {
+    public Game(String name, JFrame parent) {
         try {
-            createModel(name);
+            createModel(name, parent);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -60,15 +59,8 @@ public class Game {
 
     public GameModel getModel() { return model; }
 
-    // COMMANDES
-    public void display() {
-        mainFrame.pack();
-        mainFrame.setLocationRelativeTo(null);
-        mainFrame.setVisible(true);
-    }
-
     // OUTILS
-    private void createModel(String name) throws URISyntaxException {
+    private void createModel(String name, JFrame parent) throws URISyntaxException {
         IMaze maze = MazeFactory.backTrackingGenerator(10, 10);
 
         IPlayer player = generatorPlayer(name);
@@ -81,12 +73,10 @@ public class Game {
         Collection<IItem> items = generatorItems(3);
 
         model = new GameModel(maze, player, enemies, items);
+        this.parent = parent;
     }
 
     private void createView() {
-        mainFrame = new JFrame("Labyrinthe");
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         mazeView = new MazeView(getMaze());
 
         pointsPlayer = new PointsPlayerView(getPlayer());
@@ -116,12 +106,12 @@ public class Game {
             gbc.gridy = 1;
             m.add(pointsPlayer, gbc);
         }
-        mainFrame.add(m);
+        this.add(m);
     }
 
     private void createController() {
         // système d'écouteurs pour les raccouris clavier
-        mainFrame.addKeyListener(new KeyAdapter() {
+        parent.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 int code = e.getKeyCode();
                 // flèche du bas
@@ -160,7 +150,7 @@ public class Game {
                         public void run() {
                             getModel().freezeEnemies();
                             JOptionPane.showMessageDialog(
-                                    mainFrame,
+                                    parent,
                                     ((IItem) evt.getNewValue()).getMessage(),
                                     "Objet trouvé",
                                     JOptionPane.PLAIN_MESSAGE
@@ -183,7 +173,7 @@ public class Game {
                                         getMaze().getPrincess().isSafe()) {
                                     getModel().stopEnemies();
                                     JOptionPane.showMessageDialog(
-                                            mainFrame,
+                                            parent,
                                             "Félicitation " + getPlayer().getName() + ", tu as gagné !",
                                             "Victoire",
                                             JOptionPane.PLAIN_MESSAGE
@@ -206,7 +196,7 @@ public class Game {
                                 public void run() {
                                     getModel().freezeEnemies();
                                     JOptionPane.showMessageDialog(
-                                            mainFrame,
+                                            parent,
                                             getMaze().getPrincess().getMessage(),
                                             "Princesse sauvée",
                                             JOptionPane.PLAIN_MESSAGE
@@ -232,7 +222,7 @@ public class Game {
                                         getModel().getEnemies().get(i).stop();
                                     }
                                     JOptionPane.showMessageDialog(
-                                            mainFrame,
+                                            parent,
                                             "Vous êtes mort !",
                                             "Game Over",
                                             JOptionPane.PLAIN_MESSAGE
@@ -253,7 +243,7 @@ public class Game {
                             public void run() {
                                 getModel().stopEnemies();
                                 JOptionPane.showMessageDialog(
-                                        mainFrame,
+                                        parent,
                                         "Vous avez été tué par "+ ((IEntity) evt.getNewValue()).getName(),
                                         "Game Over",
                                         JOptionPane.PLAIN_MESSAGE
@@ -331,7 +321,13 @@ public class Game {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new Game("test").display();
+                JFrame mainFrame = new JFrame("Labyrinthe");
+                mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                mainFrame.pack();
+                mainFrame.setLocationRelativeTo(null);
+                mainFrame.setVisible(true);
+                mainFrame.setSize(800,400);
+                mainFrame.add(new Game("test", mainFrame));
             }
         });
     }
