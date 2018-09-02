@@ -1,5 +1,7 @@
 package view;
 
+import model.Theme;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,8 +14,6 @@ import java.beans.PropertyChangeSupport;
 public class Parameter extends JPanel {
 
     //CONSTANTES
-    public final String[] THEME = { "Aucun", "Harry Potter", "Game Of Throne",
-                                    "Pokemon", "Star Wars", "Seigneur des Anneaux"};
     public final int MIN_DIFFICULTY = 1;
     public final int MAX_DIFFICULTY = 5;
     public final int INIT_DIFFICULTY = 1;
@@ -24,7 +24,7 @@ public class Parameter extends JPanel {
 
     // ATTRIBUTS
     private JLabel theme;
-    private JComboBox themeBox;
+    private JComboBox<Theme> themeBox;
     private JLabel name;
     private JTextField textName;
     private JButton validate;
@@ -67,7 +67,7 @@ public class Parameter extends JPanel {
 
     private void createView() {
         theme = new JLabel("Choisir le thème : ");
-        themeBox = new JComboBox(THEME);
+        themeBox = new JComboBox<>(Theme.values());
         themeBox.setPreferredSize(new Dimension(200, 30));
         themeBox.setMaximumRowCount(5);
 

@@ -66,8 +66,8 @@ public class Game extends JPanel {
         IPlayer player = generatorPlayer(name);
 
         Collection< IEnemy > enemies = new ArrayList<>();
-        enemies.add(EnemyFactory.createZombie());
-        enemies.add(EnemyFactory.createZombie2());
+        enemies.add(EnemyFactory.createAdvancedZombie());
+        enemies.add(EnemyFactory.createSimpleZombie());
         //enemies.add(EnemyFactory.createZombie3());
 
         Collection<IItem> items = generatorItems(3);

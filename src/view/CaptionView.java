@@ -255,7 +255,7 @@ public class CaptionView extends JPanel {
                 IMaze maze = MazeFactory.backTrackingGenerator(IMaze.DEFAULT_WIDTH, IMaze.DEFAULT_HEIGHT);
 
                 Collection enemies = new ArrayList();
-                enemies.add(EnemyFactory.createZombie());
+                enemies.add(EnemyFactory.createSimpleZombie());
 
                 GameModel model = new GameModel(maze, player, enemies, new ArrayList<>());
 

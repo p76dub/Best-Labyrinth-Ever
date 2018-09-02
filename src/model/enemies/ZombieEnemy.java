@@ -3,10 +3,18 @@ package model.enemies;
 import model.enemies.behaviours.RandomMoveBehaviour;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 public class ZombieEnemy extends Enemy {
-    public ZombieEnemy(String name, String message, URI imagePath, int attack, int defense, int life) {
-        super(name, message, imagePath, attack, defense, life);
+    public ZombieEnemy(int attack, int defense, int life) throws URISyntaxException {
+        super(
+                "Zombie",
+                "Grrrhorrrg",
+                ZombieEnemy.class.getResource("../../enemy3.png").toURI(),
+                attack,
+                defense,
+                life
+        );
     }
 
     @Override
